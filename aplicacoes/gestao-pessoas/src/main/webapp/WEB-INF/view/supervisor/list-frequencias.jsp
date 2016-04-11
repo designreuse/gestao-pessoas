@@ -31,15 +31,27 @@
 
 		<c:if test="${not empty turma}">
 		<div class="panel-body">
-			<div class="col-sm-3">
+			<div class="selecionarData col-sm-3">
 				<div id="dataFiltroFrequencia" class="col-sm-2"></div>
 			</div>
 			
+			
 			<div id="container-table" class="col-sm-9">
+				
+				<div class="div-select col-sm-4" style="display: none;">
+					<select class="form-control">
+						<option>ATUALIZAR STATUS</option>
+						<option value="1">PRESENTE</option>
+						<option value="2">AUSENTE</option>
+					</select>
+				</div>
+					
+				
 				<table id="table-frequencias" class="table table-striped table-hover">
 			       <tbody class="text-view-info">
 						<c:forEach var="frequencia" items="${frequencias}">
 							<tr>
+								<td><input type="checkbox" value="${estagiario.id}"/></td>
 								<td><fmt:formatDate type="time" pattern="HH:mm" value="${frequencia[5]}" /></td>
 								<td>${frequencia[1]}</td>
 								<td><a href="#" class="observacaoFrequencia" title="Realizar observação" data-pk="${frequencia[0]}">${frequencia[2]}</a></td>
@@ -48,6 +60,7 @@
 						</c:forEach>
 						<c:forEach var="estagiario" items="${estagiarios}">
 							<tr class="danger">
+								<td><input type="checkbox" value="${estagiario.id}"/></td>
 								<td><fmt:formatDate type="time" pattern="HH:mm" value="${dataAtual}" /></td>
 								<td>${estagiario.nomeCompleto}</td>
 								<td></td>
@@ -73,8 +86,53 @@
 			format: "mm/dd/yyyy",
 			todayHighlight: true,
 		});
+		//teste
+		$('input:checkbox').change(function(){
+
+			if(this.checked){
+				$('.div-select').show();	
+			}
+			else{
+				var checksMarcados = $('input:checkbox:checked').length;
+				if(checksMarcados <= 0){
+					$('.div-select').hide();
+				}
+ 			}
+		});
 		
-		$("#dataFiltroFrequencia").on("changeDate", function(event) {
+		$('select').change(function(){
+			var valor = $('select option:selected').val();
+			alert(valor);	
+		});
+		
+		
+		//fim do teste
+		$("#dataFiltroFrequencia").on("changeDate", function(event){
+			$('.selecionarData').on('change',function(){
+				
+				var data = $("#dataFiltroFrequencia").datepicker('getFormattedDate');
+				var idTurma = $("#idTurma").val();
+				
+				$.ajax({
+					url: '/gestao-pessoas/supervisor/turma/' + idTurma + '/frequencias',
+					type: "POST",
+					dataType: "html",
+					data: {
+						"data" : data,
+					},
+					success: function(result) {
+						loadFrequencias(result);
+					},
+					error: function(error) {
+						alert('Error: ' + error);
+					}
+				});		
+				
+			});	
+		});
+		
+		
+		/*$("#dataFiltroFrequencia").on("changeDate", function(event) {
 			var data = $("#dataFiltroFrequencia").datepicker('getFormattedDate');
 			var idTurma = $("#idTurma").val();
 			
@@ -93,18 +151,19 @@
 				}
 			});			
 		});
-		
+		*/
 		
 		$("#table-frequencias").DataTable({
 			 "paging": false,
 			 "bInfo": false,
-			 "order": [ [0, 'asc'],[1, 'asc'] ],
+			 "order": [ [1, 'asc'],[2, 'asc'] ],
 			 "bFilter": false,
 			 "columnDefs": [
-				{ "title": "Horário", "targets": 0 },
-				{ "title": "Nome", "targets": 1 },
-				{ "title": "obsevação", "orderable": false, "targets": 2 },
-				{ "title": "Status", "orderable": false, "targets": 3 },
+				{ "title": "", "orderable":false, "targets": 0 },            
+				{ "title": "Horário", "targets": 1 },
+				{ "title": "Nome", "targets": 2 },
+				{ "title": "Observação", "orderable": false, "targets": 3 },
+				{ "title": "Status", "orderable": false, "targets": 4 },
 			],
 			"destroy": true,
 		});
@@ -118,13 +177,14 @@
 			$("#table-frequencias").DataTable({
 				 "paging": false,
 				 "bInfo": false,
-				 "order": [ [1, 'asc'], [0, 'asc'] ],
+				 "order": [ [1, 'asc'],[2, 'asc'] ],
 				 "bFilter": false,
 				 "columnDefs": [
-					{ "title": "Horário", "targets": 0 },
-					{ "title": "Nome", "targets": 1 },
-					{ "title": "Observação", "orderable": false, "targets": 2 },
-					{ "title": "Status", "orderable": false, "targets": 3 },
+					{ "title": "", "orderable":false, "targets": 0 },            
+					{ "title": "Horário", "targets": 1 },
+					{ "title": "Nome", "targets": 2 },
+					{ "title": "obsevação", "orderable": false, "targets": 3 },
+					{ "title": "Status", "orderable": false, "targets": 4 },
 				],
 				"destroy": true,
 			}); 
