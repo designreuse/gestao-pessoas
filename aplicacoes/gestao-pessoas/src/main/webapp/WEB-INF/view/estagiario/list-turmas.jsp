@@ -43,7 +43,7 @@
 			           </tr>
 			       </thead>
 			       <tbody class="text-view-info">
-							<c:forEach var="turma" items="${turmasComPresencaHj}">
+							<c:forEach var="turma" items="${turmasComPresencaHoje}">
 								<tr>
 									<td>${turma.semestre}</td>
 									<td>${turma.nome}</td>
@@ -66,9 +66,9 @@
 									
 							</tr>
 						</c:forEach>
-								<c:forEach var="turma" items="${turmasSemPresencaHj}">
+								<c:forEach var="turma" items="${turmasSemPresencaHoje}">
 								<tr>
-									<td>${turma.semestre}</td>
+									<td>zzz${turma.semestre}</td>
 									<td>${turma.nome}</td>
 									
 									<c:if test="${turma.statusTurma eq 'FECHADA'}">
