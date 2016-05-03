@@ -6,28 +6,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.ufc.quixada.npi.enumeration.QueryType;
+import br.ufc.quixada.npi.repository.GenericRepository;
+import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
 import ufc.quixada.npi.gp.model.Documento;
 import ufc.quixada.npi.gp.model.Estagiario;
+import ufc.quixada.npi.gp.model.Evento;
+import ufc.quixada.npi.gp.model.Horario;
 import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.model.enums.StatusEntrega;
 import ufc.quixada.npi.gp.model.enums.StatusTurma;
 import ufc.quixada.npi.gp.model.enums.Tipo;
 import ufc.quixada.npi.gp.service.TurmaService;
-import br.ufc.quixada.npi.enumeration.QueryType;
-import br.ufc.quixada.npi.repository.GenericRepository;
-import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
 
 @Named
 public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements TurmaService {
 	
 	@Autowired
 	private GenericRepository<Submissao> submissaoRepository;
+	
+	@Inject
+	private GenericRepository<Evento> eventoRepository;
+	
+	@Inject
+	private GenericRepository<Horario> horarioRepository;
+	
 	
 /*	@Override
 	public List<Turma> getTurmaPeriodo(String ano, String semestre, Long idSupervisor) {
@@ -122,7 +132,9 @@ public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements Turma
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("idEstagiario", idEstagiario);
 		params.put("idTurma", idTurma);
-		
+		//estava assim
+		//Turma turma =  (Turma) findFirst(QueryType.JPQLhorarioRepository, "select t from Turma t where t.id = :idTurma and :idEstagiario member of t.estagiarios", params);
+		// agora está assim:
 		Turma turma =  (Turma) findFirst(QueryType.JPQL, "select t from Turma t where t.id = :idTurma and :idEstagiario member of t.estagiarios", params);
 
 
@@ -194,5 +206,37 @@ public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements Turma
 			
 			update(turma);
 		}
+	}
+	@Override
+	public List<Evento> getEventosByTurma(Long idTurma) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idTurma", idTurma);
+		
+		@SuppressWarnings("unchecked")
+		List<Evento> eventos = eventoRepository.find(QueryType.JPQL, "select e from Evento e where e.turma.id = :idTurma ORDER BY e.id DESC", params);
+
+		return eventos;
+	}
+	/*
+	@Override
+	public Evento getEventosById(Long idEvento) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idEvento", idEvento);
+		
+		Evento evento = (Evento) find(QueryType.JPQL, "select e from Evento e where e.id = idEvento", params);
+		
+		return evento;
+	}
+	*/
+	
+	@Override
+	public Horario getHorarioTurmaById(Long idHorario, Long idTurma) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idHorario", idHorario);
+		params.put("idTurma", idTurma);
+		
+		Horario horario =  (Horario) horarioRepository.findFirst(QueryType.JPQL, "select h from Horario h where h.turma.id = :idTurma and h.id = :idHorario", params);
+
+		return horario;
 	}
 }
