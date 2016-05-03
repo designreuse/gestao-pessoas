@@ -68,7 +68,7 @@
 						</c:forEach>
 								<c:forEach var="turma" items="${turmasSemPresencaHoje}">
 								<tr>
-									<td>zzz${turma.semestre}</td>
+									<td>${turma.semestre}</td>
 									<td>${turma.nome}</td>
 									
 									<c:if test="${turma.statusTurma eq 'FECHADA'}">

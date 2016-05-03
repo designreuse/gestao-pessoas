@@ -201,7 +201,7 @@ public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements Turma
 	public List<Turma> getTurmasSemFrequenciaHoje(Long idEstagiario) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("idEstagiario", idEstagiario);
-		List<Turma> turmas =  find(QueryType.JPQL, "select t from Turma t where :idEstagiario member of t.estagiarios and not in (select f from Frequencia f where f.data = CURRENT_DATE )", params);
+		List<Turma> turmas =  find(QueryType.JPQL, "select t from Turma t join Frequencia f where f.turma :idEstagiario member of t.estagiarios and :idEstagiario not in (select f.estagiario.id from Frequencia f join f.turma t where f.data = CURRENT_DATE)", params);
 		return turmas;
 	}
 	
