@@ -11,6 +11,7 @@ import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Turma;
 
 public interface EstagioService {
+	
 	List<AvaliacaoRendimento> getAvaliacaoBySupervisorId(Long idSupervisor);
 
 	List<AvaliacaoRendimento> getAvaliacaoByEstagiarioId(Long idEstagiario);
