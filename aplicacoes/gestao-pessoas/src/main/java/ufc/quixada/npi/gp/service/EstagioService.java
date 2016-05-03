@@ -5,12 +5,19 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ufc.quixada.npi.gp.model.AvaliacaoRendimento;
 import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Turma;
-import br.ufc.quixada.npi.service.GenericService;
 
-public interface FrequenciaService extends GenericService<Frequencia>{
+public interface EstagioService {
+	List<AvaliacaoRendimento> getAvaliacaoBySupervisorId(Long idSupervisor);
+
+	List<AvaliacaoRendimento> getAvaliacaoByEstagiarioId(Long idEstagiario);
+
+	AvaliacaoRendimento getAvaliacaoEstagioById(Long idAvaliacao);
+
+	List<AvaliacaoRendimento> getAvaliacoesEstagioByEstagiarioIdAndTurmaById(Long idEstagiario, Long idTurma);
 	
 	@Transactional
 	void atualizarStatus();
@@ -33,4 +40,5 @@ public interface FrequenciaService extends GenericService<Frequencia>{
 	
 	List<Frequencia> frequenciaPendente(Turma turma, Estagiario estagiario);
 	
+
 }

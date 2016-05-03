@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.ufc.quixada.npi.service.GenericService;
 import ufc.quixada.npi.gp.model.Estagiario;
+import ufc.quixada.npi.gp.model.Evento;
+import ufc.quixada.npi.gp.model.Horario;
 import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.model.enums.StatusTurma;
@@ -41,5 +43,10 @@ public interface TurmaService extends GenericService<Turma> {
 	Submissao getSubmissaoByEstagiarioIdAndIdTurmaAndTipo(Long idEstagiario, Long idTurma, Tipo tipo);
 	
 	List<Submissao> getSubmissoesByEstagiarioIdAndIdTurma(Long idEstagiario, Long idTurma);
+	
+	Horario getHorarioTurmaById(Long idHorario, Long idTurma);
+	
+	List<Evento> getEventosByTurma(Long idTurma);
+
 
 }
