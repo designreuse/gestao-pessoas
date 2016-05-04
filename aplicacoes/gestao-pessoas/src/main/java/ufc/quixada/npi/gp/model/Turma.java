@@ -24,6 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import ufc.quixada.npi.gp.model.enums.StatusTurma;
+import ufc.quixada.npi.gp.model.enums.TipoTurma;
 
 @Entity
 public class Turma {
