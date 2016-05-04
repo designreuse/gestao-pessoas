@@ -84,7 +84,6 @@ public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements Turma
 		return turmas;
 	}
 
-
 	@Override
 	public List<Turma> getTurmasBySupervisorIdAndStatus(StatusTurma statusTurma, Long idSupervisor) {
 		Map<String, Object> params = new HashMap<String, Object>();
