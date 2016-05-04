@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.ufc.quixada.npi.enumeration.QueryType;
@@ -28,7 +29,9 @@ import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Estagio;
 import ufc.quixada.npi.gp.model.Folga;
 import ufc.quixada.npi.gp.model.Frequencia;
+import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
+import ufc.quixada.npi.gp.model.enums.StatusEntrega;
 import ufc.quixada.npi.gp.model.enums.StatusFrequencia;
 import ufc.quixada.npi.gp.model.enums.TipoFrequencia;
 import ufc.quixada.npi.gp.repository.FrequenciaRepository;
@@ -38,6 +41,9 @@ import ufc.quixada.npi.gp.service.FolgaService;
 import ufc.quixada.npi.gp.utils.UtilGestao;
 @Named
 public class EstagioServiceImpl extends GenericServiceImpl<Estagio> implements EstagioService {
+	
+	@Inject
+	private GenericRepository<Submissao> submissaoRepository;
 	
 	@Inject
 	private GenericRepository<AvaliacaoRendimento> avaliacaoRendimentoRepository;
@@ -419,4 +425,31 @@ public class EstagioServiceImpl extends GenericServiceImpl<Estagio> implements E
 		}
 		return frequenciaPendentes;
 	}
+	// NOVOS METODOS
+	public void submeterPlano(Submissao submissao){
+		submissaoRepository.save(submissao);
+	}
+	public void submeterRelatorio(Submissao submissao){
+		submissaoRepository.save(submissao);
+	}
+	public void editarPlano(Submissao submissao) throws Exception{
+		if(StatusEntrega.SUBMETIDO.equals(submissao.getStatusEntrega()) || StatusEntrega.CORRECAO.equals(submissao.getStatusEntrega())){
+			submissaoRepository.update(submissao);
+		}else{
+			throw new Exception();
+		}
+	}
+	public void editarRelatorio(Submissao submissao) throws Exception{
+		if(StatusEntrega.SUBMETIDO.equals(submissao.getStatusEntrega()) || StatusEntrega.CORRECAO.equals(submissao.getStatusEntrega())){
+			submissaoRepository.update(submissao);
+		}else{
+			throw new Exception();
+		}
+	}
+	public void realizarPresenca(Estagio estagio){
+		
+	}
+	
+	// FIM NOVOS METODOS 
+
 }
