@@ -87,11 +87,6 @@ public class Estagiario {
 	@OneToOne(cascade = CascadeType.REFRESH)
 	private Pessoa pessoa;
 
-	@Basic(fetch = FetchType.LAZY)
-	@OneToMany(mappedBy = "estagiario", cascade = { CascadeType.PERSIST })
-	// @JoinColumn(name= "estagiario_id")
-	private List<Frequencia> frequencias;
-	
 	@OneToMany(mappedBy="estagiario")
 	private List<Estagio> estagios;
 
@@ -101,14 +96,6 @@ public class Estagiario {
 
 	public void setEstagios(List<Estagio> estagios) {
 		this.estagios = estagios;
-	}
-
-	public List<Frequencia> getFrequencias() {
-		return frequencias;
-	}
-
-	public void setFrequencias(List<Frequencia> frequencias) {
-		this.frequencias = frequencias;
 	}
 
 	public List<Turma> getTurmas() {

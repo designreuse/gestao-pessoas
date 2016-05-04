@@ -61,25 +61,38 @@ public class Turma {
 	@Enumerated(EnumType.STRING)
 	private TipoTurma tipoTurma;
 
-	@OneToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})//, fetch = FetchType.LAZY)
-	@JoinColumn(name= "turma_id")
-	private List<Frequencia> frequencias;
-
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "turmas_estagiarios")
 	private List<Estagiario> estagiarios;
-	
-	@OneToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
-	@JoinColumn(name="turma_id")
-	private List<Submissao> submissoes;
 	
 	@OneToMany(mappedBy = "turma")
 	private List<Evento> eventos;
 	
 	@OneToMany(mappedBy="turma")
 	private List<Estagio> estagios;
+
+	@OneToOne
+	private Servidor orientador;
+	//
+	@OneToMany
+	private List<Servidor> supervisores;
 	
-	
+	public List<Servidor> getSupervisores() {
+		return supervisores;
+	}
+
+	public void setSupervisores(List<Servidor> supervisores) {
+		this.supervisores = supervisores;
+	}
+
+	public Servidor getOrientador() {
+		return orientador;
+	}
+
+	public void setOrientador(Servidor orientador) {
+		this.orientador = orientador;
+	}
+
 	public List<Estagio> getEstagios() {
 		return estagios;
 	}
@@ -88,14 +101,7 @@ public class Turma {
 		this.estagios = estagios;
 	}
 
-	public List<Submissao> getSubmissoes() {
-		return submissoes;
-	}
 
-	public void setSubmissoes(List<Submissao> submissoes) {
-		this.submissoes = submissoes;
-	}
-	
 	public List<Evento> getEventos() {
 		return eventos;
 	}
@@ -160,20 +166,6 @@ public class Turma {
 		this.estagiarios = estagiarios;
 	}
 
-	/**
-	 * @return the frequencias
-	 */
-	public List<Frequencia> getFrequencias() {
-		return frequencias;
-	}
-
-	/**
-	 * @param frequencias the frequencias to set
-	 */
-	public void setFrequencias(List<Frequencia> frequencias) {
-		this.frequencias = frequencias;
-	}
-	
 	public String getSemestre() {
 		return semestre;
 	}
