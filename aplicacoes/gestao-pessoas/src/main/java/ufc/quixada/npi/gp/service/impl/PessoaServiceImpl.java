@@ -14,7 +14,6 @@ import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Papel;
 import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Servidor;
-import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.repository.FrequenciaRepository;
 import ufc.quixada.npi.gp.service.FolgaService;
 import ufc.quixada.npi.gp.service.PessoaService;
@@ -34,12 +33,6 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 	@Inject
 	private GenericRepository<Estagiario> estagiarioRepository;
 	
-	@Inject
-	private FrequenciaRepository frequenciaRepository;
-	
-	@Inject
-	private FolgaService folgaService;
-
 	@Override
 	public Pessoa getPessoaByCpf(String cpf) {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -100,47 +93,7 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 
 		return false;
 	}
-	
-	@Override
-	public Estagiario getEstagiarioByPessoaId(Long id) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("id", id);
 		
-		Estagiario estagiario = (Estagiario) estagiarioRepository.findFirst(QueryType.JPQL, "select e from Estagiario e where e.pessoa.id = :id", params);
-		
-		return estagiario;
-	}
-	@Override
-	public Pessoa getPessoaByEstagiarioId(Long id) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("id", id);
-		
-		Pessoa estagiario = (Pessoa) estagiarioRepository.findFirst(QueryType.JPQL, "select p from Pessoa p where p.id = :id", params);
-		
-		return estagiario;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Estagiario> getEstagiarioByTurmaId(Long id) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("id", id);
-		
-		List<Estagiario> estagiarios = estagiarioRepository.find(QueryType.JPQL, "select e from Estagiario e join e.turmas t where t.id = :id", params);
-
-		return estagiarios;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Estagiario> getEstagiarioByNotTurmaIdOrSemTurma(Long id) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("id", id);
-		
-		List<Estagiario> estagiarios = estagiarioRepository.find(QueryType.JPQL, "select e from Estagiario e where :id not member of e.turmas or e.turmas IS EMPTY", params);
-
-		return estagiarios;
-	}
 	
 	@Override
 	public Estagiario getEstagiarioByPessoaCpf(String cpf) {
@@ -152,29 +105,7 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 		return estagiario;
 	}
 
-	@Override
-	public boolean possuiTurmaAtiva(String cpf) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("cpf", cpf);
-
-		Turma turma = (Turma) estagiarioRepository.findFirst(QueryType.JPQL, "select t from Estagiario e join e.turmas t where e.pessoa.cpf = :cpf and t IS NOT NULL", params);
-
-		if (turma != null) {
-			return true;
-		}
-
-		return false;
-	}
-	@Override
-	public List<Estagiario> getAniversariantesMesByTurmaId(Long id) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("id", id);
-		
-		List<Estagiario> estagiarios = estagiarioRepository.find(QueryType.JPQL, "select e from Estagiario e join e.turmas t where t.id = :id and month(e.dataNascimento) = month(current_date())", params);
-
-		return estagiarios;
-	}
-
+	
 	public Papel getPapel(String papel) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("papel", papel);
@@ -185,13 +116,13 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 	}
 
 	@Override
-	public Estagiario getEstagiarioByPessoa(long idPessoa) {
+	public Estagiario getEstagiarioByPessoa(Long idPessoa) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Servidor getServidorByPessoa(long idPessoa) {
+	public Servidor getServidorByPessoa(Long idPessoa) {
 		// TODO Auto-generated method stub
 		return null;
 	}

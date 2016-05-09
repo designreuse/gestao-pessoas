@@ -7,23 +7,18 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import br.ufc.quixada.npi.enumeration.QueryType;
 import br.ufc.quixada.npi.repository.GenericRepository;
 import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
 import ufc.quixada.npi.gp.model.Evento;
 import ufc.quixada.npi.gp.model.Horario;
-import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.service.TurmaService;
 
 @Named
 public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements TurmaService {
 	
-	@Autowired
-	private GenericRepository<Submissao> submissaoRepository;
-	
+
 	@Inject
 	private GenericRepository<Evento> eventoRepository;
 	

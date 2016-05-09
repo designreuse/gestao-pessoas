@@ -41,5 +41,8 @@ public interface EstagioService {
 	
 	List<Frequencia> frequenciaPendente(Turma turma, Estagiario estagiario);
 	
+	List<Estagiario> getAniversariantesMesByTurmaId(Long id);
+
+	
 
 }

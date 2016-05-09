@@ -45,8 +45,6 @@ public class EstagioServiceImpl extends GenericServiceImpl<Estagio> implements E
 	@Inject
 	private GenericRepository<Submissao> submissaoRepository;
 	
-	@Inject
-	private GenericRepository<AvaliacaoRendimento> avaliacaoRendimentoRepository;
 	
 	@Inject
 	private FrequenciaRepository frequenciaRepository;
@@ -429,6 +427,12 @@ public class EstagioServiceImpl extends GenericServiceImpl<Estagio> implements E
 	public void realizarAvaliacaoRendimento(AvaliacaoRendimento avaliacaoRendimento) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<Estagiario> getAniversariantesMesByTurmaId(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	// FIM NOVOS METODOS 

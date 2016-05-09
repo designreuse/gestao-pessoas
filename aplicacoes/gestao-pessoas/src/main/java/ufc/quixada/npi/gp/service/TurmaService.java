@@ -1,18 +1,11 @@
 package ufc.quixada.npi.gp.service;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import br.ufc.quixada.npi.service.GenericService;
-import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Evento;
 import ufc.quixada.npi.gp.model.Horario;
-import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
-import ufc.quixada.npi.gp.model.enums.StatusTurma;
-import ufc.quixada.npi.gp.model.enums.Tipo;
 
 
 public interface TurmaService extends GenericService<Turma> {

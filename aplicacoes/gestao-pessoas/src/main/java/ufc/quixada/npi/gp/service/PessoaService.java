@@ -23,22 +23,12 @@ public interface PessoaService {
 	
 	Papel getPapel(String papel);
 	
-	Estagiario getEstagiarioByPessoaId(Long id);
-	
-	Pessoa getPessoaByEstagiarioId(Long id);
-
 	Estagiario getEstagiarioByPessoaCpf(String cpf);
+			
+	Estagiario getEstagiarioByPessoa(Long idPessoa);
 	
-	List<Estagiario> getEstagiarioByTurmaId(Long id);
+	Servidor getServidorByPessoa(Long idPessoa);
 	
-	List<Estagiario> getEstagiarioByNotTurmaIdOrSemTurma(Long id);
-	
-	List<Estagiario> getAniversariantesMesByTurmaId(Long id);
-	
-	boolean possuiTurmaAtiva(String cpf);
-	
-	Estagiario getEstagiarioByPessoa(long idPessoa);
-	Servidor getServidorByPessoa(long idPessoa);
 	Pessoa getPessoaLogada(String cpf);
 	
 }
