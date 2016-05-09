@@ -17,36 +17,30 @@ import ufc.quixada.npi.gp.model.enums.Tipo;
 
 public interface TurmaService extends GenericService<Turma> {
 
-	List<Turma> getTurmasBySupervisorId(Long idSupervisor);
+	List<Turma>  getTurmasBySupervisorOrOrientador(Long idSupervisor, Long idOrientador);
 
-	List<Turma> getTurmasBySupervisorIdAndStatus(StatusTurma statusTurma, Long idSupervisor);
-
-	List<Turma> getTurmasByEstagiarioIdAndStatus(StatusTurma statusTurma, Long idSupervisor);
-
-	Turma getTurmaByIdAndEstagiarioId(Long idTurma, Long idEstagiario);
-
-	Turma getTurmaByIdAndSupervisorById(Long idTurma, Long idSupervisor);
-
-	List<Turma> getTurmasByEstagiarioId(Long idEstagiario);
-	
-	void submeterDocumento(Estagiario estagiario, Turma turma, Tipo tipo, MultipartFile anexo) throws IOException;
-	
-	//métodos que antes eram de submissaoService 
-	void salvar(Submissao submissao);
-	
-	//void salvar(List<Submissao> submissoes);
-	
-	Submissao getSubmissaoById(Long id);
-	
-	void remover(Submissao submissao);
-	
-	Submissao getSubmissaoByEstagiarioIdAndIdTurmaAndTipo(Long idEstagiario, Long idTurma, Tipo tipo);
-	
-	List<Submissao> getSubmissoesByEstagiarioIdAndIdTurma(Long idEstagiario, Long idTurma);
-	
 	Horario getHorarioTurmaById(Long idHorario, Long idTurma);
 	
 	List<Evento> getEventosByTurma(Long idTurma);
+	
+	//crud turma
+	void adicionarTurma(Turma turma);
+	void editarTurma(Turma turma);
+	void removerTurma(long idTurma);
+	Turma getTurma(long idTurma);
+	List<Turma> getAllTurmas();
+	
+	//crud evento
+	void adicionarEvento(Evento evento);
+	void editarEvento(Evento evento);
+	void removerEvento(long idEvento);
+	Evento getEvento(long idEvento);
+	List<Evento> getAllEventosByTurma(long idTurma);
+	
+	//save delete horario
+	void adicionarHorario(Horario horario);
+	void removerHorario(long idHorario);
+	
 
 
 }

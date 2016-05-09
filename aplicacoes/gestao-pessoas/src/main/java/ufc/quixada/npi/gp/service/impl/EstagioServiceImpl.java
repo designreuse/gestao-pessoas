@@ -425,6 +425,7 @@ public class EstagioServiceImpl extends GenericServiceImpl<Estagio> implements E
 		}
 		return frequenciaPendentes;
 	}
+	
 	// NOVOS METODOS
 	public void submeterPlano(Submissao submissao){
 		submissaoRepository.save(submissao);
