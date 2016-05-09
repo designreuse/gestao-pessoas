@@ -9,8 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -34,123 +33,101 @@ public class AvaliacaoRendimento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private double nota;
-	
-	private double notaSeminario;
+	@OneToOne
+	@JoinColumn(name = "estagio_id")
+	private Estagio estagio;
 
-	@Lob
-	private String atividadeCurricular;
-	
-	@Temporal(TemporalType.DATE)
-	private Date dataInicio;
-	
-	@Temporal(TemporalType.DATE)
-	private Date dataTermino;
-	
-	@Temporal(TemporalType.DATE)
-	private Date dataAvaliacao;
-	
-	@Lob
-	private String objetivoEstagio;
-	
-	@Lob
-	private String fatorAssiduidadeDisciplina;
-
-	@Enumerated(EnumType.STRING)
-	private Frequencia frequencia;
-	
-	@Enumerated(EnumType.STRING)
-	private Iniciativa iniciativa;
-	
-	@Enumerated(EnumType.STRING)
-	private Disciplina disciplina;
-	
-	@Enumerated(EnumType.STRING)
-	private Comprometimento comprometimento;
-	
-	@Enumerated(EnumType.STRING)
-	private CuidadoMateriais cuidadoMateriais;
-	
-	@Enumerated(EnumType.STRING)
-	private Permanencia permanencia; 
-	
-	@Enumerated(EnumType.STRING)
-	private QualidadeDeTrabalho qualidadeTrabalho;
-	
-	@Enumerated(EnumType.STRING)
-	private QuantidadeDeTrabalho quantidadeTrabalho;
-	
-	@Enumerated(EnumType.STRING)
-	private Relacionamento relacionamento;
-	
-	@Enumerated(EnumType.STRING)
-	private TrabalhoEmEquipe trabalhoEquipe;
-	
-	@Enumerated(EnumType.STRING)
-	private CumprimentoPrazos cumprimentoPrazos; 
-	
-	@Enumerated(EnumType.STRING)
-	private CaraterTreinamento caraterTreinamento;
-	
-	@Lob
-	private String comentarioAssuidadeDisciplina;
-	
-	@Lob
-	private String comentarioIniciativaProdutividade;
-
-	@Lob
-	private String comentarioResponsabilidade;
-
-	@Lob
-	private String comentarioRelacionamento;
-	
-	@Lob
-	private String comentarioSeminario;
-
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "documento_id")
 	private Documento documento;
 
-	@Lob
+	private double nota;
+
+	private double notaSeminario;
+
+	private String atividadeCurricular;
+
+	@Temporal(TemporalType.DATE)
+	private Date dataInicial;
+
+	@Temporal(TemporalType.DATE)
+	private Date dataTermino;
+
+	@Temporal(TemporalType.DATE)
+	private Date dataAvaliacao;
+
+	private String objetivoEstagio;
+
+	@Enumerated(EnumType.STRING)
+	private Frequencia frequencia;
+
+	@Enumerated(EnumType.STRING)
+	private Iniciativa iniciativa;
+
+	@Enumerated(EnumType.STRING)
+	private Disciplina disciplina;
+
+	@Enumerated(EnumType.STRING)
+	private Comprometimento comprometimento;
+
+	@Enumerated(EnumType.STRING)
+	private CuidadoMateriais cuidadoMateriais;
+
+	@Enumerated(EnumType.STRING)
+	private Permanencia permanencia;
+
+	@Enumerated(EnumType.STRING)
+	private QualidadeDeTrabalho qualidadeTrabalho;
+
+	@Enumerated(EnumType.STRING)
+	private QuantidadeDeTrabalho quantidadeTrabalho;
+
+	@Enumerated(EnumType.STRING)
+	private Relacionamento relacionamento;
+
+	@Enumerated(EnumType.STRING)
+	private TrabalhoEmEquipe trabalhoEquipe;
+
+	@Enumerated(EnumType.STRING)
+	private CumprimentoPrazos cumprimentoPrazos;
+
+	@Enumerated(EnumType.STRING)
+	private CaraterTreinamento caraterTreinamento;
+
+	private String comentarioAssuidadeDisciplina;
+
+	private String comentarioIniciativaProdutividade;
+
+	private String comentarioResponsabilidade;
+
+	private String comentarioRelacionamento;
+
+	private String comentarioSeminario;
+
 	private String comentarioFinal;
 
-	@ManyToOne
-	@JoinColumn(name = "turma_id")
-	private Turma turma;
+	private Boolean confirmado;
 
-	@ManyToOne
-	@JoinColumn(name = "supervisor_id")
-	private Pessoa supervisor;
-
-	@ManyToOne
-	@JoinColumn(name = "estagiario_id")
-	private Estagiario estagiario;
-	
-	private Boolean confirmado; 
-	
 	private Boolean assuidade;
-	
+
 	private Boolean fatorDisciplina;
-	
+
 	private Boolean capacidadeIniciativa;
-	
+
 	private Boolean produtividade;
-	
+
 	private Boolean responsabilidade;
-	
+
 	private Boolean outrosMotivos;
-	
-	@Lob
+
 	private String especificacaoMotivo;
-	
-	@Lob
+
 	private String comentarioOrientador;
-	
+
 	private Boolean necessidadeTreinamento;
-	
-	@Lob
+
 	private String especificacaoTreinamento;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -215,30 +192,6 @@ public class AvaliacaoRendimento {
 		this.comentarioFinal = comentario;
 	}
 
-	public Turma getTurma() {
-		return turma;
-	}
-
-	public void setTurma(Turma turma) {
-		this.turma = turma;
-	}
-
-	public Pessoa getSupervisor() {
-		return supervisor;
-	}
-
-	public void setSupervisor(Pessoa supervisor) {
-		this.supervisor = supervisor;
-	}
-
-	public Estagiario getEstagiario() {
-		return estagiario;
-	}
-
-	public void setEstagiario(Estagiario estagiario) {
-		this.estagiario = estagiario;
-	}
-	
 	public double getNotaSeminario() {
 		return notaSeminario;
 	}
@@ -246,7 +199,7 @@ public class AvaliacaoRendimento {
 	public void setNotaSeminario(double notaSeminario) {
 		this.notaSeminario = notaSeminario;
 	}
-	
+
 	public String getComentarioSeminario() {
 		return comentarioSeminario;
 	}
@@ -262,7 +215,7 @@ public class AvaliacaoRendimento {
 	public void setComentarioAssuidadeDisciplina(String comentarioAssuidadeDisciplina) {
 		this.comentarioAssuidadeDisciplina = comentarioAssuidadeDisciplina;
 	}
-	
+
 	public Frequencia getFrequencia() {
 		return frequencia;
 	}
@@ -310,7 +263,7 @@ public class AvaliacaoRendimento {
 	public CaraterTreinamento getCaraterTreinamento() {
 		return caraterTreinamento;
 	}
-	
+
 	public String getAtividadeCurricular() {
 		return atividadeCurricular;
 	}
@@ -319,12 +272,12 @@ public class AvaliacaoRendimento {
 		this.atividadeCurricular = atividadeCurricular;
 	}
 
-	public Date getDataInicio() {
-		return dataInicio;
+	public Date getDataInicial() {
+		return dataInicial;
 	}
 
-	public void setDataInicio(Date dataInicio) {
-		this.dataInicio = dataInicio;
+	public void setDataInicial(Date dataInicial) {
+		this.dataInicial = dataInicial;
 	}
 
 	public Date getDataTermino() {
@@ -349,14 +302,6 @@ public class AvaliacaoRendimento {
 
 	public void setObjetivoEstagio(String objetivoEstagio) {
 		this.objetivoEstagio = objetivoEstagio;
-	}
-
-	public String getFatorAssiduidadeDisciplina() {
-		return fatorAssiduidadeDisciplina;
-	}
-
-	public void setFatorAssiduidadeDisciplina(String fatorAssiduidadeDisciplina) {
-		this.fatorAssiduidadeDisciplina = fatorAssiduidadeDisciplina;
 	}
 
 	public Boolean getConfirmado() {
@@ -500,15 +445,12 @@ public class AvaliacaoRendimento {
 	}
 
 	/*
-	public boolean isConfirmadoEstagio() {
-		return confirmadoEstagio;
-	}
+	 * public boolean isConfirmadoEstagio() { return confirmadoEstagio; }
+	 * 
+	 * public void setConfirmadoEstagio(boolean confirmadoEstagio) {
+	 * this.confirmadoEstagio = confirmadoEstagio; }
+	 */
 
-	public void setConfirmadoEstagio(boolean confirmadoEstagio) {
-		this.confirmadoEstagio = confirmadoEstagio;
-	}*/
-	
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof AvaliacaoRendimento) {
@@ -520,5 +462,4 @@ public class AvaliacaoRendimento {
 		return false;
 	}
 
-	
 }

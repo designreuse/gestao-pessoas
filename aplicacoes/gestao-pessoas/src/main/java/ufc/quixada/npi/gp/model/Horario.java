@@ -2,11 +2,9 @@ package ufc.quixada.npi.gp.model;
 
 import java.util.Date;
 
-import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,24 +22,23 @@ public class Horario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
+	@ManyToOne
+	private Turma turma;
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Dia dia;
-	
+
 	@NotNull
 	@Temporal(TemporalType.TIME)
 	@DateTimeFormat(pattern = "HH:mm")
 	private Date inicioExpediente;
-	
+
 	@NotNull
 	@Temporal(TemporalType.TIME)
 	@DateTimeFormat(pattern = "HH:mm")
 	private Date finalExpediente;
-	
-	@Basic(fetch = FetchType.LAZY)
-	@ManyToOne
-	private Turma turma;
 
 	public Long getId() {
 		return id;
@@ -74,7 +71,7 @@ public class Horario {
 	public void setFinalExpediente(Date finalExpediente) {
 		this.finalExpediente = finalExpediente;
 	}
-	
+
 	public Turma getTurma() {
 		return turma;
 	}

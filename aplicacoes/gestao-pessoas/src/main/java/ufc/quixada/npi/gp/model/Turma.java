@@ -3,7 +3,6 @@ package ufc.quixada.npi.gp.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -32,7 +29,23 @@ public class Turma {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
+	@OneToOne
+	private Servidor orientador;
+
+	@OneToMany
+	private List<Servidor> supervisores;
+
+	@OneToMany
+	@JoinColumn(name = "turma_id")
+	List<Horario> horarios;
+
+	@OneToMany(mappedBy = "turma")
+	private List<Evento> eventos;
+
+	@OneToMany(mappedBy = "turma")
+	private List<Estagio> estagios;
+
 	private String nome;
 
 	@Column(nullable = false)
@@ -48,36 +61,13 @@ public class Turma {
 	@NotNull(message = "Informe a data final.")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date termino;
-	
-	@OneToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
-	@JoinColumn(name= "turma_id")
-	List<Horario> horarios;
 
-	@OneToOne//(fetch = FetchType.LAZY)
-	private Pessoa supervisor;
-	
 	@Enumerated(EnumType.STRING)
-	private StatusTurma statusTurma;
-	
+	private StatusTurma status;
+
 	@Enumerated(EnumType.STRING)
 	private TipoTurma tipoTurma;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "turmas_estagiarios")
-	private List<Estagiario> estagiarios;
-	
-	@OneToMany(mappedBy = "turma")
-	private List<Evento> eventos;
-	
-	@OneToMany(mappedBy="turma")
-	private List<Estagio> estagios;
-
-	@OneToOne
-	private Servidor orientador;
-	//
-	@OneToMany
-	private List<Servidor> supervisores;
-	
 	public List<Servidor> getSupervisores() {
 		return supervisores;
 	}
@@ -102,7 +92,6 @@ public class Turma {
 		this.estagios = estagios;
 	}
 
-
 	public List<Evento> getEventos() {
 		return eventos;
 	}
@@ -111,18 +100,18 @@ public class Turma {
 		this.eventos = eventos;
 	}
 
-	public StatusTurma getStatusTurma() {
-		return statusTurma;
+	public StatusTurma getStatus() {
+		return status;
 	}
 
-	public void setStatusTurma(StatusTurma statusTurma) {
-		this.statusTurma = statusTurma;
+	public void setStatus(StatusTurma statusTurma) {
+		this.status = statusTurma;
 	}
-	
+
 	public TipoTurma getTipoTurma() {
 		return tipoTurma;
 	}
-	
+
 	public void setTipoTurma(TipoTurma tipoTurma) {
 		this.tipoTurma = tipoTurma;
 	}
@@ -149,22 +138,6 @@ public class Turma {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public Pessoa getSupervisor() {
-		return supervisor;
-	}
-
-	public void setSupervisor(Pessoa supervisor) {
-		this.supervisor = supervisor;
-	}
-
-	public List<Estagiario> getEstagiarios() {
-		return estagiarios;
-	}
-
-	public void setEstagiarios(List<Estagiario> estagiarios) {
-		this.estagiarios = estagiarios;
 	}
 
 	public String getSemestre() {

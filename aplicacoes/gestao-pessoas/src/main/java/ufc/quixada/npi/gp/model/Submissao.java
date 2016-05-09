@@ -16,7 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import ufc.quixada.npi.gp.model.enums.StatusEntrega;
-import ufc.quixada.npi.gp.model.enums.Tipo;
+import ufc.quixada.npi.gp.model.enums.TipoSubmissao;
 
 @Entity
 public class Submissao {
@@ -24,7 +24,15 @@ public class Submissao {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	@OneToOne(cascade = CascadeType.ALL)	
+	@JoinColumn(name = "documento_id")
+	private Documento documento;
+	
+	@ManyToOne
+	@JoinColumn(name = "estagio_id")
+	private Estagio estagio;
+	
 	private double nota;
 	
 	private String comentario;
@@ -33,30 +41,13 @@ public class Submissao {
 	private Date data;
 	
 	@Temporal(TemporalType.TIME)
-	private Date horario;
+	private Date hora;
 
 	@Enumerated(EnumType.STRING)
-	private Tipo tipo;
+	private TipoSubmissao tipoSubmissao;
 	
 	@Enumerated(EnumType.STRING)
-	private StatusEntrega statusEntrega;
-	
-	public Estagiario getEstagiario() {
-		return estagiario;
-	}
-
-	public void setEstagiario(Estagiario estagiario) {
-		this.estagiario = estagiario;
-	}
-
-	@ManyToOne
-	@JoinColumn(name = "estagiario_id")
-	private Estagiario estagiario;
-	
-	
-	@OneToOne(cascade = CascadeType.ALL)	
-	@JoinColumn(name = "documento_id")
-	private Documento documento;
+	private StatusEntrega status;
 	
 	public Long getId() {
 		return id;
@@ -78,32 +69,32 @@ public class Submissao {
 		return data;
 	}
 	
-	public Date getHorario() {
-		return horario;
+	public Date getHora() {
+		return hora;
 	}
 
-	public void setHorario(Date tempo) {
-		this.horario = tempo;
+	public void setHora(Date tempo) {
+		this.hora = tempo;
 	}
 	
 	public void setData(Date data) {
 		this.data = data;
 	}
 	
-	public StatusEntrega getStatusEntrega() {
-		return statusEntrega;
+	public StatusEntrega getStatus() {
+		return status;
 	}
 
 	public void setStatusEntrega(StatusEntrega statusEntrega) {
-		this.statusEntrega = statusEntrega;
+		this.status = statusEntrega;
 	}
 		
-	public Tipo getTipo() {
-		return tipo;
+	public TipoSubmissao getTipoSubmissao() {
+		return tipoSubmissao;
 	}
 
-	public void setTipo(Tipo tipo) {
-		this.tipo = tipo;
+	public void setTipoSubmissao(TipoSubmissao tipo) {
+		this.tipoSubmissao = tipo;
 	}
 	
 	public Documento getDocumento() {
@@ -131,6 +122,14 @@ public class Submissao {
 			}
 		}
 		return false;
+	}
+
+	public Estagio getEstagio() {
+		return estagio;
+	}
+
+	public void setEstagio(Estagio estagio) {
+		this.estagio = estagio;
 	}
 	
 }

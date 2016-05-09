@@ -3,16 +3,13 @@ package ufc.quixada.npi.gp.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -35,6 +32,12 @@ public class Estagiario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@OneToOne(cascade = CascadeType.REFRESH)
+	private Pessoa pessoa;
+
+	@OneToMany(mappedBy="estagiario")
+	private List<Estagio> estagios;
+	
 	@NotNull(message = "Campo obrigatório.")
 	@NotEmpty(message = "Campo obrigatório.")
 	private String nomeMae;
@@ -62,7 +65,10 @@ public class Estagiario {
 	@NotEmpty(message = "Campo obrigatório.")
 	private String telefone;
 
+	@NotNull(message = "Campo obrigatório")
+	@NotEmpty(message = "Campo obrigatório.")
 	private String usuarioGithub;
+	
 	@Email(message = "Informe um e-mail valido")
 	private String email;
 
@@ -80,30 +86,13 @@ public class Estagiario {
 
 	@Enumerated(EnumType.STRING)
 	private Estado uf;
-
-	@ManyToMany(mappedBy = "estagiarios",  cascade = CascadeType.ALL)
-	private List<Turma> turmas;
-
-	@OneToOne(cascade = CascadeType.REFRESH)
-	private Pessoa pessoa;
-
-	@OneToMany(mappedBy="estagiario")
-	private List<Estagio> estagios;
-
+	
 	public List<Estagio> getEstagios() {
 		return estagios;
 	}
 
 	public void setEstagios(List<Estagio> estagios) {
 		this.estagios = estagios;
-	}
-
-	public List<Turma> getTurmas() {
-		return turmas;
-	}
-
-	public void setTurmas(List<Turma> turmas) {
-		this.turmas = turmas;
 	}
 
 	public Estagiario() {

@@ -16,9 +16,6 @@ public class PessoaEntityListener implements ApplicationContextAware {
 	public void loadPessoa(Pessoa pessoa) {
 		UsuarioService usuarioService = (UsuarioService) context.getBean(UsuarioService.class);
 		Usuario usuario = usuarioService.getByCpf(pessoa.getCpf());
-		pessoa.setNome(usuario.getNome());
-		pessoa.setEmail(usuario.getEmail());
-		pessoa.setSiape(usuario.getSiape());
 	}
 	
 	public ApplicationContext getApplicationContext() {

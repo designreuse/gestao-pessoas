@@ -8,7 +8,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -21,10 +20,14 @@ import ufc.quixada.npi.gp.model.enums.TipoEstagio;
 @IdClass(TurmaEstagiarioId.class)
 public class Estagio {
 	
-	private String local;
+	@OneToOne
+	private AvaliacaoRendimento avaliacaoRendimento;
+
+	@OneToMany
+	private List<Submissao> submissoes;
 	
-	@Enumerated(EnumType.STRING)
-	private TipoEstagio tipoEstagio;
+	@OneToMany
+	private List<Frequencia> frequencias;
 	
 	@Id
 	@ManyToOne
@@ -36,41 +39,25 @@ public class Estagio {
 	@JoinColumn(name="estagiario_id")
 	private Estagiario estagiario;
 
-	
-	@OneToMany
-	private List<Submissao> submissoes;
-	
-	@OneToMany
-	private List<Frequencia> frequencias;
-	
-	@OneToOne
-	private AvaliacaoRendimento avaliacaoRendimento;
-	
 	@Enumerated(EnumType.STRING)
 	private Resultado resultado;
 	
 	@Enumerated(EnumType.STRING)
 	private Situacao situacao;
 	
-	private double nota;
+	@Enumerated(EnumType.STRING)
+	private TipoEstagio estagio;
 	
-	@Lob
 	private String comentarioSituacao;
 	
-	public String getLocal() {
-		return local;
-	}
-
-	public void setLocal(String local) {
-		this.local = local;
-	}
-
-	public TipoEstagio getTipoEstagio() {
-		return tipoEstagio;
+	private double nota;
+		
+	public TipoEstagio getEstagio() {
+		return estagio;
 	}
 
 	public void setEstagio(TipoEstagio tipoEstagio) {
-		this.tipoEstagio = tipoEstagio;
+		this.estagio = tipoEstagio;
 	}
 
 	public Turma getTurma() {
@@ -127,10 +114,6 @@ public class Estagio {
 
 	public void setNota(double nota) {
 		this.nota = nota;
-	}
-
-	public void setTipoEstagio(TipoEstagio tipoEstagio) {
-		this.tipoEstagio = tipoEstagio;
 	}
 
 	public String getComentarioSituacao() {
