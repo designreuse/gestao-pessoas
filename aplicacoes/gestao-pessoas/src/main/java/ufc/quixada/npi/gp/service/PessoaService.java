@@ -5,6 +5,7 @@ import java.util.List;
 import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Papel;
 import ufc.quixada.npi.gp.model.Pessoa;
+import ufc.quixada.npi.gp.model.Servidor;
 
 public interface PessoaService {
 
@@ -35,5 +36,9 @@ public interface PessoaService {
 	List<Estagiario> getAniversariantesMesByTurmaId(Long id);
 	
 	boolean possuiTurmaAtiva(String cpf);
+	
+	Estagiario getEstagiarioByPessoa(long idPessoa);
+	Servidor getServidorByPessoa(long idPessoa);
+	Pessoa getPessoaLogada(String cpf);
 	
 }

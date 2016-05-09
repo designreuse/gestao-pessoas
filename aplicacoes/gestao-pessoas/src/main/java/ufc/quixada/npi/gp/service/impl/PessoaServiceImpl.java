@@ -1,42 +1,23 @@
 package ufc.quixada.npi.gp.service.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.joda.time.LocalDate;
-import org.springframework.transaction.annotation.Transactional;
-
+import br.ufc.quixada.npi.enumeration.QueryType;
+import br.ufc.quixada.npi.repository.GenericRepository;
+import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
 import ufc.quixada.npi.gp.model.Estagiario;
-import ufc.quixada.npi.gp.model.Folga;
-import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Papel;
 import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Servidor;
 import ufc.quixada.npi.gp.model.Turma;
-import ufc.quixada.npi.gp.model.enums.StatusFrequencia;
-import ufc.quixada.npi.gp.model.enums.TipoFrequencia;
 import ufc.quixada.npi.gp.repository.FrequenciaRepository;
-import ufc.quixada.npi.gp.service.DadoConsolidado;
 import ufc.quixada.npi.gp.service.FolgaService;
 import ufc.quixada.npi.gp.service.PessoaService;
-import ufc.quixada.npi.gp.utils.UtilGestao;
-import br.ufc.quixada.npi.enumeration.QueryType;
-import br.ufc.quixada.npi.repository.GenericRepository;
-import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
-import net.objectlab.kit.datecalc.common.DateCalculator;
-import net.objectlab.kit.datecalc.common.DefaultHolidayCalendar;
-import net.objectlab.kit.datecalc.common.HolidayCalendar;
-import net.objectlab.kit.datecalc.common.HolidayHandlerType;
-import net.objectlab.kit.datecalc.joda.LocalDateKitCalculatorsFactory;
 
 @Named
 public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements PessoaService {
@@ -201,6 +182,24 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 		Papel papelPessoa = (Papel) papelRepository.findFirst(QueryType.JPQL, "from Papel where nome = :papel", params);
 
 		return papelPessoa;
+	}
+
+	@Override
+	public Estagiario getEstagiarioByPessoa(long idPessoa) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Servidor getServidorByPessoa(long idPessoa) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Pessoa getPessoaLogada(String cpf) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
