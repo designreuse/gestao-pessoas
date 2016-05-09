@@ -8,17 +8,17 @@ import org.springframework.transaction.annotation.Transactional;
 import ufc.quixada.npi.gp.model.AvaliacaoRendimento;
 import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Frequencia;
+import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
+import ufc.quixada.npi.gp.model.enums.Tipo;
 
 public interface EstagioService {
 	
-	List<AvaliacaoRendimento> getAvaliacaoBySupervisorId(Long idSupervisor);
-
-	List<AvaliacaoRendimento> getAvaliacaoByEstagiarioId(Long idEstagiario);
-
-	AvaliacaoRendimento getAvaliacaoEstagioById(Long idAvaliacao);
-
-	List<AvaliacaoRendimento> getAvaliacoesEstagioByEstagiarioIdAndTurmaById(Long idEstagiario, Long idTurma);
+	Submissao getSubmissaoByEstagioAndTipo(long idEstagio, Tipo tipo);
+	
+	void avaliarPlano(Submissao submissao);
+	void avaliarRelatorioI(Submissao submissao);
+	void realizarAvaliacaoRendimento(AvaliacaoRendimento avaliacaoRendimento);
 	
 	@Transactional
 	void atualizarStatus();

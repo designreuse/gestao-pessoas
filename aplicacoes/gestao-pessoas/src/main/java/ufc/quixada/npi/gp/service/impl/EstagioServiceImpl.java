@@ -33,6 +33,7 @@ import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.model.enums.StatusEntrega;
 import ufc.quixada.npi.gp.model.enums.StatusFrequencia;
+import ufc.quixada.npi.gp.model.enums.Tipo;
 import ufc.quixada.npi.gp.model.enums.TipoFrequencia;
 import ufc.quixada.npi.gp.repository.FrequenciaRepository;
 import ufc.quixada.npi.gp.service.DadoConsolidado;
@@ -54,51 +55,7 @@ public class EstagioServiceImpl extends GenericServiceImpl<Estagio> implements E
 	@Inject
 	private FolgaService folgaService;
 	
-	@Override
-	public List<AvaliacaoRendimento> getAvaliacaoBySupervisorId(Long idSupervisor) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("idSupervisor", idSupervisor);
-		@SuppressWarnings("unchecked")
-		List<AvaliacaoRendimento> avaliacoes = avaliacaoRendimentoRepository.find(QueryType.JPQL,
-				"select ar from AvaliacaoRendimento ar where ar.supervisor.id = :idSupervisor", params);
-
-		return avaliacoes;
-	}
-
-	@Override
-	public List<AvaliacaoRendimento> getAvaliacaoByEstagiarioId(Long idEstagiario) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("idEstagiario", idEstagiario);
-		@SuppressWarnings("unchecked")
-		List<AvaliacaoRendimento> avaliacoes = avaliacaoRendimentoRepository.find(QueryType.JPQL,
-				"select ar from AvaliacaoRendimento ar where ar.estagiario.id = :idEstagiario", params);
-
-		return avaliacoes;
-	}
-
-	@Override
-	public AvaliacaoRendimento getAvaliacaoEstagioById(Long idAvaliacao) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("idAvaliacao", idAvaliacao);
-		@SuppressWarnings("unchecked")
-		AvaliacaoRendimento avaliacao = (AvaliacaoRendimento) avaliacaoRendimentoRepository.find(QueryType.JPQL,
-				"select * from AvaliacaoRendimento ar where ar.id = :idAvaliacao", params);
-
-		return avaliacao;
-	}
-
-	@Override
-	public List<AvaliacaoRendimento> getAvaliacoesEstagioByEstagiarioIdAndTurmaById(Long idEstagiario, Long idTurma) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("idEstagiario", idEstagiario);
-		params.put("idTurma", idTurma);
-		@SuppressWarnings("unchecked")
-		List<AvaliacaoRendimento> avaliacoes = avaliacaoRendimentoRepository.find(QueryType.JPQL,
-				"select ar from AvaliacaoRendimento ar where ar.estagiario.id = :idEstagiario and ar.turma.id = :idTurma",
-				params);
-
-		return avaliacoes;
-	}
+	
 	// INICIO FREQUENCIA
 	
 /*
@@ -448,6 +405,30 @@ public class EstagioServiceImpl extends GenericServiceImpl<Estagio> implements E
 		}
 	}
 	public void realizarPresenca(Estagio estagio){
+		
+	}
+
+	@Override
+	public Submissao getSubmissaoByEstagioAndTipo(long idEstagio, Tipo tipo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void avaliarPlano(Submissao submissao) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void avaliarRelatorioI(Submissao submissao) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void realizarAvaliacaoRendimento(AvaliacaoRendimento avaliacaoRendimento) {
+		// TODO Auto-generated method stub
 		
 	}
 	
