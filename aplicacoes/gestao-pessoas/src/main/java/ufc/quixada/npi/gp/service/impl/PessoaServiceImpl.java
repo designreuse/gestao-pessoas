@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import br.ufc.quixada.npi.enumeration.QueryType;
 import br.ufc.quixada.npi.repository.GenericRepository;
 import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
@@ -14,9 +16,8 @@ import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Papel;
 import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Servidor;
-import ufc.quixada.npi.gp.repository.FrequenciaRepository;
-import ufc.quixada.npi.gp.service.FolgaService;
 import ufc.quixada.npi.gp.service.PessoaService;
+import ufc.quixada.npi.gp.utils.Constants;
 
 @Named
 public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements PessoaService {
@@ -93,8 +94,7 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 
 		return false;
 	}
-		
-	
+			
 	@Override
 	public Estagiario getEstagiarioByPessoaCpf(String cpf) {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -104,7 +104,6 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 		
 		return estagiario;
 	}
-
 	
 	public Papel getPapel(String papel) {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -117,20 +116,41 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 
 	@Override
 	public Estagiario getEstagiarioByPessoa(Long idPessoa) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idPessoa", idPessoa);
+
+		Estagiario estagiario = (Estagiario) estagiarioRepository.findFirst(QueryType.JPQL, "select e from Estagiario e where e.pessoa.id = :idPessoa", params);
+		
+		return estagiario;
 	}
 
 	@Override
 	public Servidor getServidorByPessoa(Long idPessoa) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idPessoa", idPessoa);
+
+		Servidor servidor = (Servidor) servidorRepository.findFirst(QueryType.JPQL, "select s from Servidor s where s.pessoa.id = :idPessoa", params);
+		
+		return servidor;
+	}
+
+	//Verificar implementação do método
+	@Override
+	public Pessoa getPessoaLogada(String cpf) {
+		
+		Pessoa pessoa = getPessoaByCpf(SecurityContextHolder.getContext().getAuthentication().getName());
+		
+		return pessoa; 
 	}
 
 	@Override
-	public Pessoa getPessoaLogada(String cpf) {
-		// TODO Auto-generated method stub
-		return null;
+	public Servidor getServidorByPessoaCpf(String cpf) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cpf", cpf);
+
+		Servidor servidor = (Servidor) servidorRepository.findFirst(QueryType.JPQL, "select s from Servidor s where s.pessoa.cpf = :cpf", params);
+		
+		return servidor;
 	}
 
 }

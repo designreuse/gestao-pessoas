@@ -29,6 +29,8 @@ public interface PessoaService {
 	
 	Servidor getServidorByPessoa(Long idPessoa);
 	
+	Servidor getServidorByPessoaCpf(String cpf);
+	
 	Pessoa getPessoaLogada(String cpf);
 	
 }
