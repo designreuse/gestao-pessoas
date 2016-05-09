@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import br.ufc.quixada.npi.enumeration.QueryType;
 import br.ufc.quixada.npi.repository.GenericRepository;
 import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
@@ -17,7 +15,6 @@ import ufc.quixada.npi.gp.model.Papel;
 import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Servidor;
 import ufc.quixada.npi.gp.service.PessoaService;
-import ufc.quixada.npi.gp.utils.Constants;
 
 @Named
 public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements PessoaService {
@@ -132,15 +129,6 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 		Servidor servidor = (Servidor) servidorRepository.findFirst(QueryType.JPQL, "select s from Servidor s where s.pessoa.id = :idPessoa", params);
 		
 		return servidor;
-	}
-
-	//Verificar implementação do método
-	@Override
-	public Pessoa getPessoaLogada(String cpf) {
-		
-		Pessoa pessoa = getPessoaByCpf(SecurityContextHolder.getContext().getAuthentication().getName());
-		
-		return pessoa; 
 	}
 
 	@Override

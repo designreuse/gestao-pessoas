@@ -31,6 +31,4 @@ public interface PessoaService {
 	
 	Servidor getServidorByPessoaCpf(String cpf);
 	
-	Pessoa getPessoaLogada(String cpf);
-	
 }
