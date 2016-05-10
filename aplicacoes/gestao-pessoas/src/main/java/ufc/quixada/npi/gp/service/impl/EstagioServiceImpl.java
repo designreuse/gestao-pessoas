@@ -273,10 +273,16 @@ public class EstagioServiceImpl implements EstagioService {
 		
 	}
 
+	//Verificar consulta por tipo
 	@Override
-	public Submissao getSubmissaoByEstagioAndTipo(Long idEstagio, Tipo tipo) {
-		// TODO Auto-generated method stub
-		return null;
+	public Submissao getSubmissaoByEstagio(Estagio estagio) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("estagio", estagio);
+		
+		Submissao submissao = (Submissao) submissaoRepository.find(QueryType.JPQL, "select s from Submissao join Estagio e where e.turma.id = estagio.turma.id and e.estagiario.id = estagio.estagiario", params);
+
+		return submissao;
+
 	}
 
 	@Override
@@ -286,7 +292,7 @@ public class EstagioServiceImpl implements EstagioService {
 	}
 
 	@Override
-	public void avaliarRelatorioI(Submissao submissao) {
+	public void avaliarRelatorio(Submissao submissao) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -299,8 +305,12 @@ public class EstagioServiceImpl implements EstagioService {
 
 	@Override
 	public List<Estagiario> getAniversariantesMesByTurmaId(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		
+		List<Estagiario> estagiarios = estagioRepository.find(QueryType.JPQL, "select e from Estagiario e join e.turmas t where t.id = :id and month(e.dataNascimento) = month(current_date())", params);
+
+		return estagiarios;
 	}
 	
 	// FIM NOVOS METODOS 

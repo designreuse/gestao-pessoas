@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ufc.quixada.npi.gp.model.AvaliacaoRendimento;
 import ufc.quixada.npi.gp.model.Estagiario;
+import ufc.quixada.npi.gp.model.Estagio;
 import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
@@ -14,10 +15,10 @@ import ufc.quixada.npi.gp.model.enums.Tipo;
 
 public interface EstagioService {
 	
-	Submissao getSubmissaoByEstagioAndTipo(Long idEstagio, Tipo tipo);
+	Submissao getSubmissaoByEstagio(Estagio estagio);
 	
 	void avaliarPlano(Submissao submissao);
-	void avaliarRelatorioI(Submissao submissao);
+	void avaliarRelatorio(Submissao submissao);
 	void realizarAvaliacaoRendimento(AvaliacaoRendimento avaliacaoRendimento);
 	
 	@Transactional
