@@ -16,7 +16,7 @@ import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.service.TurmaService;
 
 @Named
-public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements TurmaService {
+public class TurmaServiceImpl implements TurmaService{
 	
 
 	@Inject
@@ -24,15 +24,19 @@ public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements Turma
 	
 	@Inject
 	private GenericRepository<Horario> horarioRepository;
+	
+	@Inject
+	private GenericRepository<Turma> turmaRepository;
+	
 
 	
-	//ajeitar consulta
+	//ajeitar consulta quando tiver orientador no modelo
 	@Override
 	public List<Turma> getTurmasBySupervisorOrOrientador(Long idSupervisor, Long idOrientador) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("idSupervisor", idSupervisor);
 		@SuppressWarnings("unchecked")
-		List<Turma> turmas = find(QueryType.JPQL,"select t from Turma t where t.supervisor.id = :idSupervisor", params);
+		List<Turma> turmas = turmaRepository.find(QueryType.JPQL,"select t from Turma t where t.supervisor.id = :idSupervisor", params);
 
 		return turmas;
 	}
@@ -60,75 +64,80 @@ public class TurmaServiceImpl extends GenericServiceImpl<Turma> implements Turma
 	}
 
 	@Override
-	public Turma getTurma(long idTurma) {
-		// TODO Auto-generated method stub
-		return null;
+	public Turma getTurma(Long idTurma) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idTurma", idTurma);
+		
+		Turma turma =  (Turma) turmaRepository.findFirst(QueryType.JPQL, "select t from Turma t where t.id = :idTurma", params);
+
+		return turma;
 	}
 
 	@Override
 	public List<Turma> getAllTurmas() {
-		// TODO Auto-generated method stub
-		return null;
+		List <Turma> turmas = turmaRepository.find(Turma.class);
+
+		return turmas;
 	}
 
 	@Override
 	public void adicionarTurma(Turma turma) {
-		// TODO Auto-generated method stub
-		
+		turmaRepository.save(turma);
 	}
 
 	@Override
 	public void editarTurma(Turma turma) {
-		// TODO Auto-generated method stub
-		
+		turmaRepository.update(turma);
 	}
 
 	@Override
-	public void removerTurma(long idTurma) {
-		// TODO Auto-generated method stub
-		
+	public void removerTurma(Long idTurma) {
+		turmaRepository.delete(turmaRepository.find(Turma.class, idTurma));
 	}
 
 	@Override
 	public void adicionarEvento(Evento evento) {
-		// TODO Auto-generated method stub
-		
+		eventoRepository.save(evento);
 	}
 
 	@Override
 	public void editarEvento(Evento evento) {
-		// TODO Auto-generated method stub
+		eventoRepository.update(evento);
+	}
+
+	@Override
+	public void removerEvento(Long idEvento) {
+		eventoRepository.delete(eventoRepository.find(Evento.class, idEvento));
+	}
+
+	@Override
+	public Evento getEvento(Long idEvento) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idEvento", idEvento);
 		
+		Evento evento =  (Evento) eventoRepository.findFirst(QueryType.JPQL, "select e from Evento e where e.id = :idEvento", params);
+
+		return evento;
 	}
 
 	@Override
-	public void removerEvento(long idEvento) {
-		// TODO Auto-generated method stub
+	public List<Evento> getAllEventosByTurma(Long idTurma) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idTurma", idTurma);
 		
-	}
+		List<Evento> eventos =  eventoRepository.find(QueryType.JPQL, "select e from Evento e where e.turma.id = :idTurma", params);
 
-	@Override
-	public Evento getEvento(long idEvento) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Evento> getAllEventosByTurma(long idTurma) {
-		// TODO Auto-generated method stub
-		return null;
+		return eventos;
 	}
 
 	@Override
 	public void adicionarHorario(Horario horario) {
-		// TODO Auto-generated method stub
-		
+		horarioRepository.save(horario);
 	}
 
 	@Override
-	public void removerHorario(long idHorario) {
-		// TODO Auto-generated method stub
-		
+	public void removerHorario(Long idHorario) {
+		horarioRepository.delete(horarioRepository.find(Horario.class, idHorario));
 	}
 
 	

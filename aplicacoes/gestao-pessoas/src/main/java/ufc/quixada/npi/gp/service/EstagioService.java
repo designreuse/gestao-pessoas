@@ -14,7 +14,7 @@ import ufc.quixada.npi.gp.model.enums.Tipo;
 
 public interface EstagioService {
 	
-	Submissao getSubmissaoByEstagioAndTipo(long idEstagio, Tipo tipo);
+	Submissao getSubmissaoByEstagioAndTipo(Long idEstagio, Tipo tipo);
 	
 	void avaliarPlano(Submissao submissao);
 	void avaliarRelatorioI(Submissao submissao);

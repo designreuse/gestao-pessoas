@@ -8,7 +8,7 @@ import ufc.quixada.npi.gp.model.Horario;
 import ufc.quixada.npi.gp.model.Turma;
 
 
-public interface TurmaService extends GenericService<Turma> {
+public interface TurmaService {
 
 	List<Turma>  getTurmasBySupervisorOrOrientador(Long idSupervisor, Long idOrientador);
 
@@ -19,20 +19,20 @@ public interface TurmaService extends GenericService<Turma> {
 	//crud turma
 	void adicionarTurma(Turma turma);
 	void editarTurma(Turma turma);
-	void removerTurma(long idTurma);
-	Turma getTurma(long idTurma);
+	void removerTurma(Long idTurma);
+	Turma getTurma(Long idTurma);
 	List<Turma> getAllTurmas();
 	
 	//crud evento
 	void adicionarEvento(Evento evento);
 	void editarEvento(Evento evento);
-	void removerEvento(long idEvento);
-	Evento getEvento(long idEvento);
-	List<Evento> getAllEventosByTurma(long idTurma);
+	void removerEvento(Long idEvento);
+	Evento getEvento(Long idEvento);
+	List<Evento> getAllEventosByTurma(Long idTurma);
 	
 	//save delete horario
 	void adicionarHorario(Horario horario);
-	void removerHorario(long idHorario);
+	void removerHorario(Long idHorario);
 	
 
 
