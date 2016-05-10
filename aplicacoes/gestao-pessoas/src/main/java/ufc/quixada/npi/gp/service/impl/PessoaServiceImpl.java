@@ -17,7 +17,7 @@ import ufc.quixada.npi.gp.model.Servidor;
 import ufc.quixada.npi.gp.service.PessoaService;
 
 @Named
-public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements PessoaService {
+public class PessoaServiceImpl implements PessoaService {
 
 	@Inject
 	private GenericRepository<Pessoa> pessoaRepository;

@@ -40,17 +40,20 @@ import ufc.quixada.npi.gp.service.EstagioService;
 import ufc.quixada.npi.gp.service.FolgaService;
 import ufc.quixada.npi.gp.utils.UtilGestao;
 @Named
-public class EstagioServiceImpl extends GenericServiceImpl<Estagio> implements EstagioService {
+public class EstagioServiceImpl implements EstagioService {
 	
 	@Inject
 	private GenericRepository<Submissao> submissaoRepository;
-	
 	
 	@Inject
 	private FrequenciaRepository frequenciaRepository;
 		
 	@Inject
 	private FolgaService folgaService;
+	
+	@Inject
+	private GenericRepository<Estagio> estagioRepository;
+	
 	
 	
 	// INICIO FREQUENCIA
