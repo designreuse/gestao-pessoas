@@ -444,13 +444,6 @@ public class AvaliacaoRendimento {
 		this.comentarioFinal = comentarioFinal;
 	}
 
-	/*
-	 * public boolean isConfirmadoEstagio() { return confirmadoEstagio; }
-	 * 
-	 * public void setConfirmadoEstagio(boolean confirmadoEstagio) {
-	 * this.confirmadoEstagio = confirmadoEstagio; }
-	 */
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof AvaliacaoRendimento) {
