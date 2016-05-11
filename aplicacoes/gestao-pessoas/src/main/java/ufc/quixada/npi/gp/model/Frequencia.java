@@ -2,19 +2,15 @@ package ufc.quixada.npi.gp.model;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import ufc.quixada.npi.gp.model.enums.StatusFrequencia;
 import ufc.quixada.npi.gp.model.enums.TipoFrequencia;
@@ -26,37 +22,25 @@ public class Frequencia {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@ManyToOne
+	private Turma turma;
+
+	@ManyToOne
+	private Estagio estagio;
+
 	@Enumerated(EnumType.STRING)
-	private StatusFrequencia statusFrequencia;
+	private StatusFrequencia status;
 
 	@Temporal(TemporalType.DATE)
 	private Date data;
-	
+
 	@Temporal(TemporalType.TIME)
 	private Date horario;
 
 	@Enumerated(EnumType.STRING)
-	private TipoFrequencia tipoFrequencia;
+	private TipoFrequencia tipo;
 
 	private String observacao;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Turma turma;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@OneToMany(cascade = {CascadeType.PERSIST})
-	private Estagiario estagiario;
-	
-	@Transient
-	private int totalAtraso; 
-
-	public int getTotalAtraso() {
-		return totalAtraso;
-	}
-
-	public void setTotalAtraso(int totalAtraso) {
-		this.totalAtraso = totalAtraso;
-	}
 
 	public Long getId() {
 		return id;
@@ -67,17 +51,17 @@ public class Frequencia {
 	}
 
 	public StatusFrequencia getStatusFrequencia() {
-		return statusFrequencia;
+		return status;
 	}
 
 	public void setStatusFrequencia(StatusFrequencia statusFrequencia) {
-		this.statusFrequencia = statusFrequencia;
+		this.status = statusFrequencia;
 	}
 
 	public Date getData() {
 		return data;
 	}
-	
+
 	public Date getHorario() {
 		return horario;
 	}
@@ -85,17 +69,17 @@ public class Frequencia {
 	public void setHorario(Date tempo) {
 		this.horario = tempo;
 	}
-	
+
 	public void setData(Date data) {
 		this.data = data;
 	}
 
 	public TipoFrequencia getTipoFrequencia() {
-		return tipoFrequencia;
+		return tipo;
 	}
 
 	public void setTipoFrequencia(TipoFrequencia tipoFrequencia) {
-		this.tipoFrequencia = tipoFrequencia;
+		this.tipo = tipoFrequencia;
 	}
 
 	public String getObservacao() {
@@ -114,14 +98,12 @@ public class Frequencia {
 		this.turma = turma;
 	}
 
-	public Estagiario getEstagiario() {
-		return estagiario;
+	public void setEstagio(Estagio estagio) {
+		this.estagio = estagio;
 	}
 
-	public void setEstagiario(Estagiario estagiario) {
-		this.estagiario = estagiario;
+	public Estagio getEstagio() {
+		return estagio;
 	}
 
-	
-	
 }

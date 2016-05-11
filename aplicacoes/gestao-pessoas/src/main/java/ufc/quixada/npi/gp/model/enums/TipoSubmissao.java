@@ -1,13 +1,12 @@
 package ufc.quixada.npi.gp.model.enums;
 
-public enum Tipo {
+public enum TipoSubmissao {
 	PLANO_ESTAGIO("Plano de Estágio"),
-	RELATORIO_FINAL_ESTAGIO("Relatório Final de Estágio"),
-	AVALIACAO_RENDIMENTO("Avaliação de Rendimento");
+	RELATORIO_FINAL_ESTAGIO("Relatório Final de Estágio");
 
 	private String labelTipo;
 
-	private Tipo(String labelTipo) {
+	private TipoSubmissao(String labelTipo) {
 		this.labelTipo = labelTipo;
 	}
 

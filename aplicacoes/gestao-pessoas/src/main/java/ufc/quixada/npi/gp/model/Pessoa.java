@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 @Entity
@@ -23,7 +22,7 @@ public class Pessoa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToMany
 	@JoinTable(name = "papel_pessoa", joinColumns = @JoinColumn(name = "pessoa_id"), inverseJoinColumns = @JoinColumn(name = "papel_id"))
 	private List<Papel> papeis;
@@ -31,21 +30,13 @@ public class Pessoa {
 	@Column(unique = true)
 	private String cpf;
 
-	@Transient
-	private String nome;
+	public Pessoa() {
+	}
 
-	@Transient
-	private String email;
-
-	@Transient
-	private String siape;
-
-	public Pessoa(){}
-
-	public Pessoa(String cpf){
+	public Pessoa(String cpf) {
 		setCpf(cpf);
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -70,29 +61,4 @@ public class Pessoa {
 		this.cpf = cpf;
 	}
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSiape() {
-		return siape;
-	}
-
-	public void setSiape(String siape) {
-		this.siape = siape;
-	}
-
 }
-

@@ -3,7 +3,6 @@ package ufc.quixada.npi.gp.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -24,6 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import ufc.quixada.npi.gp.model.enums.StatusTurma;
+import ufc.quixada.npi.gp.model.enums.TipoTurma;
 
 @Entity
 public class Turma {
@@ -31,7 +29,22 @@ public class Turma {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
+	@OneToOne
+	private Servidor orientador;
+
+	@OneToMany
+	private List<Servidor> supervisores;
+
+	@OneToMany(mappedBy = "turma")
+	List<Horario> horarios;
+
+	@OneToMany(mappedBy = "turma")
+	private List<Evento> eventos;
+
+	@OneToMany(mappedBy = "turma")
+	private List<Estagio> estagios;
+
 	private String nome;
 
 	@Column(nullable = false)
@@ -47,39 +60,29 @@ public class Turma {
 	@NotNull(message = "Informe a data final.")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date termino;
-	
-	@OneToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
-	@JoinColumn(name= "turma_id")
-	List<Horario> horarios;
 
-	@OneToOne//(fetch = FetchType.LAZY)
-	private Pessoa supervisor;
-	
 	@Enumerated(EnumType.STRING)
-	private StatusTurma statusTurma;
-	
+	private StatusTurma status;
+
 	@Enumerated(EnumType.STRING)
 	private TipoTurma tipoTurma;
 
-	@OneToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})//, fetch = FetchType.LAZY)
-	@JoinColumn(name= "turma_id")
-	private List<Frequencia> frequencias;
+	public List<Servidor> getSupervisores() {
+		return supervisores;
+	}
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "turmas_estagiarios")
-	private List<Estagiario> estagiarios;
-	
-	@OneToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
-	@JoinColumn(name="turma_id")
-	private List<Submissao> submissoes;
-	
-	@OneToMany(mappedBy = "turma")
-	private List<Evento> eventos;
-	
-	@OneToMany(mappedBy="turma")
-	private List<Estagio> estagios;
-	
-	
+	public void setSupervisores(List<Servidor> supervisores) {
+		this.supervisores = supervisores;
+	}
+
+	public Servidor getOrientador() {
+		return orientador;
+	}
+
+	public void setOrientador(Servidor orientador) {
+		this.orientador = orientador;
+	}
+
 	public List<Estagio> getEstagios() {
 		return estagios;
 	}
@@ -88,14 +91,6 @@ public class Turma {
 		this.estagios = estagios;
 	}
 
-	public List<Submissao> getSubmissoes() {
-		return submissoes;
-	}
-
-	public void setSubmissoes(List<Submissao> submissoes) {
-		this.submissoes = submissoes;
-	}
-	
 	public List<Evento> getEventos() {
 		return eventos;
 	}
@@ -104,18 +99,18 @@ public class Turma {
 		this.eventos = eventos;
 	}
 
-	public StatusTurma getStatusTurma() {
-		return statusTurma;
+	public StatusTurma getStatus() {
+		return status;
 	}
 
-	public void setStatusTurma(StatusTurma statusTurma) {
-		this.statusTurma = statusTurma;
+	public void setStatus(StatusTurma statusTurma) {
+		this.status = statusTurma;
 	}
-	
+
 	public TipoTurma getTipoTurma() {
 		return tipoTurma;
 	}
-	
+
 	public void setTipoTurma(TipoTurma tipoTurma) {
 		this.tipoTurma = tipoTurma;
 	}
@@ -144,36 +139,6 @@ public class Turma {
 		this.nome = nome;
 	}
 
-	public Pessoa getSupervisor() {
-		return supervisor;
-	}
-
-	public void setSupervisor(Pessoa supervisor) {
-		this.supervisor = supervisor;
-	}
-
-	public List<Estagiario> getEstagiarios() {
-		return estagiarios;
-	}
-
-	public void setEstagiarios(List<Estagiario> estagiarios) {
-		this.estagiarios = estagiarios;
-	}
-
-	/**
-	 * @return the frequencias
-	 */
-	public List<Frequencia> getFrequencias() {
-		return frequencias;
-	}
-
-	/**
-	 * @param frequencias the frequencias to set
-	 */
-	public void setFrequencias(List<Frequencia> frequencias) {
-		this.frequencias = frequencias;
-	}
-	
 	public String getSemestre() {
 		return semestre;
 	}
