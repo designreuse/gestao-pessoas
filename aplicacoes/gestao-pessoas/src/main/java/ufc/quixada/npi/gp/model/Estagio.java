@@ -5,9 +5,9 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -17,26 +17,25 @@ import ufc.quixada.npi.gp.model.enums.Situacao;
 import ufc.quixada.npi.gp.model.enums.TipoEstagio;
 
 @Entity
-@IdClass(TurmaEstagiarioId.class)
 public class Estagio {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
 	@OneToOne
 	private AvaliacaoRendimento avaliacaoRendimento;
 
-	@OneToMany
+	@OneToMany (mappedBy = "estagio")
 	private List<Submissao> submissoes;
 	
-	@OneToMany
+	@OneToMany (mappedBy = "estagio")
 	private List<Frequencia> frequencias;
 	
-	@Id
 	@ManyToOne
-	@JoinColumn(name="turma_id")
 	private Turma turma; 
 	
-	@Id
 	@ManyToOne
-	@JoinColumn(name="estagiario_id")
 	private Estagiario estagiario;
 
 	@Enumerated(EnumType.STRING)

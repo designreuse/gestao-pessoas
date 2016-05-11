@@ -11,6 +11,7 @@ import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.model.enums.StatusTurma;
 import ufc.quixada.npi.gp.model.enums.Tipo;
+import ufc.quixada.npi.gp.model.enums.TipoSubmissao;
 
 
 public interface TurmaService extends GenericService<Turma> {
@@ -27,7 +28,7 @@ public interface TurmaService extends GenericService<Turma> {
 
 	List<Turma> getTurmasByEstagiarioId(Long idEstagiario);
 	
-	void submeterDocumento(Estagiario estagiario, Turma turma, Tipo tipo, MultipartFile anexo) throws IOException;
+	void submeterDocumento(Estagiario estagiario, Turma turma, TipoSubmissao tipo, MultipartFile anexo) throws IOException;
 	
 	//métodos que antes eram de submissaoService 
 	void salvar(Submissao submissao);

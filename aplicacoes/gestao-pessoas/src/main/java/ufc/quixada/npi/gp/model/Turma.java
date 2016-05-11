@@ -36,8 +36,7 @@ public class Turma {
 	@OneToMany
 	private List<Servidor> supervisores;
 
-	@OneToMany
-	@JoinColumn(name = "turma_id")
+	@OneToMany(mappedBy = "turma")
 	List<Horario> horarios;
 
 	@OneToMany(mappedBy = "turma")
