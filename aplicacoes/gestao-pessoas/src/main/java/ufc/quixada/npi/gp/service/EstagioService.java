@@ -11,14 +11,12 @@ import ufc.quixada.npi.gp.model.Estagio;
 import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
-import ufc.quixada.npi.gp.model.enums.Tipo;
 
 public interface EstagioService {
 	
 	Submissao getSubmissaoByEstagio(Estagio estagio);
 	
-	void avaliarPlano(Submissao submissao);
-	void avaliarRelatorio(Submissao submissao);
+	void avaliarSubmissao(Submissao submissao);
 	void realizarAvaliacaoRendimento(AvaliacaoRendimento avaliacaoRendimento);
 	
 	@Transactional

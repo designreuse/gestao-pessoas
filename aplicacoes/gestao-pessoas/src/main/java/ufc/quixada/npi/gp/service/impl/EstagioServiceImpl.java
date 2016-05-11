@@ -52,6 +52,9 @@ public class EstagioServiceImpl implements EstagioService {
 	@Inject
 	private GenericRepository<Estagio> estagioRepository;
 	
+	@Inject 
+	private GenericRepository<AvaliacaoRendimento> avaliacaoRendimentoRepository;
+	
 	
 	
 	// INICIO FREQUENCIA
@@ -284,21 +287,13 @@ public class EstagioServiceImpl implements EstagioService {
 	}
 
 	@Override
-	public void avaliarPlano(Submissao submissao) {
-		// TODO Auto-generated method stub
-		
+	public void avaliarSubmissao(Submissao submissao) {
+		submissaoRepository.update(submissao);		
 	}
-
-	@Override
-	public void avaliarRelatorio(Submissao submissao) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void realizarAvaliacaoRendimento(AvaliacaoRendimento avaliacaoRendimento) {
-		// TODO Auto-generated method stub
-		
+		avaliacaoRendimentoRepository.save(avaliacaoRendimento);	
 	}
 
 	@Override
