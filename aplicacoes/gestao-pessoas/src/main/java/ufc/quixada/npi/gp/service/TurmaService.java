@@ -2,7 +2,6 @@ package ufc.quixada.npi.gp.service;
 
 import java.util.List;
 
-import br.ufc.quixada.npi.service.GenericService;
 import ufc.quixada.npi.gp.model.Evento;
 import ufc.quixada.npi.gp.model.Horario;
 import ufc.quixada.npi.gp.model.Turma;
@@ -10,7 +9,7 @@ import ufc.quixada.npi.gp.model.Turma;
 
 public interface TurmaService {
 
-	List<Turma>  getTurmasBySupervisorOrOrientador(Long idSupervisor, Long idOrientador);
+	List<Turma>  getTurmasBySupervisorOrOrientador(Long idServidor);
 
 	Horario getHorarioTurmaById(Long idHorario, Long idTurma);
 	

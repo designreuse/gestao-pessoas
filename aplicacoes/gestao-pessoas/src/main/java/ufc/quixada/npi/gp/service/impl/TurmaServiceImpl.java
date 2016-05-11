@@ -9,7 +9,6 @@ import javax.inject.Named;
 
 import br.ufc.quixada.npi.enumeration.QueryType;
 import br.ufc.quixada.npi.repository.GenericRepository;
-import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
 import ufc.quixada.npi.gp.model.Evento;
 import ufc.quixada.npi.gp.model.Horario;
 import ufc.quixada.npi.gp.model.Turma;
@@ -27,16 +26,14 @@ public class TurmaServiceImpl implements TurmaService{
 	
 	@Inject
 	private GenericRepository<Turma> turmaRepository;
-	
 
-	
-	//ajeitar consulta quando tiver orientador no modelo
+
 	@Override
-	public List<Turma> getTurmasBySupervisorOrOrientador(Long idSupervisor, Long idOrientador) {
+	public List<Turma> getTurmasBySupervisorOrOrientador(Long idServidor) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("idSupervisor", idSupervisor);
+		params.put("idServidor", idServidor);
 		@SuppressWarnings("unchecked")
-		List<Turma> turmas = turmaRepository.find(QueryType.JPQL,"select t from Turma t where t.supervisor.id = :idSupervisor", params);
+		List<Turma> turmas = turmaRepository.find(QueryType.JPQL,"select t from Turma t where t.servidor.id = :idServido r", params);
 
 		return turmas;
 	}
