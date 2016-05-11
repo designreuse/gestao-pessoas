@@ -7,17 +7,17 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.ufc.quixada.npi.enumeration.QueryType;
+import br.ufc.quixada.npi.repository.GenericRepository;
+import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
 import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Papel;
 import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Servidor;
 import ufc.quixada.npi.gp.service.PessoaService;
-import br.ufc.quixada.npi.enumeration.QueryType;
-import br.ufc.quixada.npi.repository.GenericRepository;
-import br.ufc.quixada.npi.service.impl.GenericServiceImpl;
 
 @Named
-public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements PessoaService {
+public class PessoaServiceImpl implements PessoaService {
 
 	@Inject
 	private GenericRepository<Pessoa> pessoaRepository;
@@ -30,7 +30,7 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 	
 	@Inject
 	private GenericRepository<Estagiario> estagiarioRepository;
-
+	
 	@Override
 	public Pessoa getPessoaByCpf(String cpf) {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -90,6 +90,55 @@ public class PessoaServiceImpl extends GenericServiceImpl<Pessoa> implements Pes
 		}
 
 		return false;
+	}
+			
+	@Override
+	public Estagiario getEstagiarioByPessoaCpf(String cpf) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cpf", cpf);
+
+		Estagiario estagiario = (Estagiario) estagiarioRepository.findFirst(QueryType.JPQL, "select e from Estagiario e where e.pessoa.cpf = :cpf", params);
+		
+		return estagiario;
+	}
+	
+	public Papel getPapel(String papel) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("papel", papel);
+
+		Papel papelPessoa = (Papel) papelRepository.findFirst(QueryType.JPQL, "from Papel where nome = :papel", params);
+
+		return papelPessoa;
+	}
+
+	@Override
+	public Estagiario getEstagiarioByPessoa(Long idPessoa) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idPessoa", idPessoa);
+
+		Estagiario estagiario = (Estagiario) estagiarioRepository.findFirst(QueryType.JPQL, "select e from Estagiario e where e.pessoa.id = :idPessoa", params);
+		
+		return estagiario;
+	}
+
+	@Override
+	public Servidor getServidorByPessoa(Long idPessoa) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idPessoa", idPessoa);
+
+		Servidor servidor = (Servidor) servidorRepository.findFirst(QueryType.JPQL, "select s from Servidor s where s.pessoa.id = :idPessoa", params);
+		
+		return servidor;
+	}
+
+	@Override
+	public Servidor getServidorByPessoaCpf(String cpf) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cpf", cpf);
+
+		Servidor servidor = (Servidor) servidorRepository.findFirst(QueryType.JPQL, "select s from Servidor s where s.pessoa.cpf = :cpf", params);
+		
+		return servidor;
 	}
 
 }

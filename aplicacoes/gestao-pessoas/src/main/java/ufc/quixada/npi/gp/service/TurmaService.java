@@ -1,46 +1,38 @@
 package ufc.quixada.npi.gp.service;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import br.ufc.quixada.npi.service.GenericService;
-import ufc.quixada.npi.gp.model.Estagiario;
-import ufc.quixada.npi.gp.model.Submissao;
+import ufc.quixada.npi.gp.model.Evento;
+import ufc.quixada.npi.gp.model.Horario;
 import ufc.quixada.npi.gp.model.Turma;
-import ufc.quixada.npi.gp.model.enums.StatusTurma;
-import ufc.quixada.npi.gp.model.enums.Tipo;
-import ufc.quixada.npi.gp.model.enums.TipoSubmissao;
 
 
-public interface TurmaService extends GenericService<Turma> {
+public interface TurmaService {
 
-	List<Turma> getTurmasBySupervisorId(Long idSupervisor);
+	List<Turma>  getTurmasBySupervisorOrOrientador(Long idServidor);
 
-	List<Turma> getTurmasBySupervisorIdAndStatus(StatusTurma statusTurma, Long idSupervisor);
-
-	List<Turma> getTurmasByEstagiarioIdAndStatus(StatusTurma statusTurma, Long idSupervisor);
-
-	Turma getTurmaByIdAndEstagiarioId(Long idTurma, Long idEstagiario);
-
-	Turma getTurmaByIdAndSupervisorById(Long idTurma, Long idSupervisor);
-
-	List<Turma> getTurmasByEstagiarioId(Long idEstagiario);
+	Horario getHorarioTurmaById(Long idHorario, Long idTurma);
 	
-	void submeterDocumento(Estagiario estagiario, Turma turma, TipoSubmissao tipo, MultipartFile anexo) throws IOException;
+	List<Evento> getEventosByTurma(Long idTurma);
 	
-	//métodos que antes eram de submissaoService 
-	void salvar(Submissao submissao);
+	//crud turma
+	void adicionarTurma(Turma turma);
+	void editarTurma(Turma turma);
+	void removerTurma(Long idTurma);
+	Turma getTurma(Long idTurma);
+	List<Turma> getAllTurmas();
 	
-	//void salvar(List<Submissao> submissoes);
+	//crud evento
+	void adicionarEvento(Evento evento);
+	void editarEvento(Evento evento);
+	void removerEvento(Long idEvento);
+	Evento getEvento(Long idEvento);
+	List<Evento> getAllEventosByTurma(Long idTurma);
 	
-	Submissao getSubmissaoById(Long id);
+	//save delete horario
+	void adicionarHorario(Horario horario);
+	void removerHorario(Long idHorario);
 	
-	void remover(Submissao submissao);
-	
-	Submissao getSubmissaoByEstagiarioIdAndIdTurmaAndTipo(Long idEstagiario, Long idTurma, Tipo tipo);
-	
-	List<Submissao> getSubmissoesByEstagiarioIdAndIdTurma(Long idEstagiario, Long idTurma);
+
 
 }
