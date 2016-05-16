@@ -41,7 +41,7 @@ public class HomeController {
 
 		Usuario usuario = usuarioService.getByCpf(SecurityContextHolder.getContext().getAuthentication().getName());
 		
-		if (estagiarioService.getEstagiarioByPessoaCpf(usuario.getCpf()) != null) {
+		if (pessoaService.getEstagiarioByPessoaCpf(usuario.getCpf()) != null) {
 			return "redirect:/estagiario/meus-dados";
 		}
 		
@@ -60,17 +60,19 @@ public class HomeController {
 
 		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		Papel papel = papelService.getPapel("ROLE_ESTAGIARIO_NPI");
+		Papel papel = pessoaService.getPapel("ROLE_ESTAGIARIO_NPI");
 
 		Pessoa pessoa = new Pessoa(cpf);
 		pessoa.setPapeis(new ArrayList<Papel>());
 		pessoa.getPapeis().add(papel);
 
 		pessoaService.save(pessoa);
+		//pessoaService.adicionarPessoa(pessoa);
 
 
 		estagiario.setPessoa(pessoa);
-		estagiarioService.save(estagiario);
+		pessoaService.save(estagiario);
+		//pessoaService.adicionarEstagiario(estagiario);
 		
 		getUsuarioLogado(session);
 

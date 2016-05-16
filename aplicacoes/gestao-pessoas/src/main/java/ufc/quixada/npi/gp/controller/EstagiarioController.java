@@ -2,6 +2,8 @@ package ufc.quixada.npi.gp.controller;
 
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_FORM_ESTAGIARIO;
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_INICIAL_ESTAGIARIO;
+import static ufc.quixada.npi.gp.utils.Constants.PAGINA_SOBRE;
+import static ufc.quixada.npi.gp.utils.Constants.PAGINA_ACOMPANHAMENTO_ESTAGIARIO;
 import static ufc.quixada.npi.gp.utils.Constants.REDIRECT_PAGINA_INICIAL_ESTAGIARIO;
 
 import java.io.IOException;
@@ -21,10 +23,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ufc.quixada.npi.gp.model.Estagiario;
+import ufc.quixada.npi.gp.model.Estagio;
 import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Submissao;
@@ -50,108 +54,88 @@ public class EstagiarioController {
 
 	@RequestMapping(value = "/MinhasTurmas", method = RequestMethod.GET)
 	public String getTurmas(Model model, HttpSession session) {
-		Pessoa pessoa = getUsuarioLogado(session);
-
-		Estagiario estagiario = estagiarioService.getEstagiarioByPessoaId(pessoa.getId());
-
-		List<Turma> turmas = turmaService.getTurmasByEstagiarioId(estagiario.getId());
-
-		model.addAttribute("turmas", turmas);
-
-
-		if(!estagiarioService.possuiTurmaAtiva(pessoa.getCpf())){
-			model.addAttribute("possuiTurma", false);
-		}
-		
+		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
+		Estagiario estagiario = pessoaService.getEstagiarioByPessoaCpf(cpf);
+		model.addAttribute("estagios", estagiario.getEstagios());
 		
 		return PAGINA_INICIAL_ESTAGIARIO;
 	}
 
 	@RequestMapping(value = "/MeusDados", method = RequestMethod.GET)
 	public String getMeusDados(Model model) {
-		
 		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
-
-		Estagiario estagiario = estagiarioService.getEstagiarioByPessoaCpf(cpf);
-
-		if (estagiario == null) {
-			return "redirect:/home/meu-cadastro";
-		} else {
-			model.addAttribute("action", "editar");
-			model.addAttribute("estagiario", estagiario);
-		}
+		Estagiario estagiario = pessoaService.getEstagiarioByPessoaCpf(cpf);
+		model.addAttribute("action", "editar");
+		model.addAttribute("estagiario", estagiario);
 
 		return PAGINA_FORM_ESTAGIARIO;
 	}
 
 	@RequestMapping(value = "/MeusDados", method = RequestMethod.POST)
 	public String postMeusDados(@Valid @ModelAttribute("estagiario") Estagiario estagiario, BindingResult result, HttpSession session, RedirectAttributes redirect, Model model) {
-		model.addAttribute("action", "editar");
 
 		if (result.hasErrors()) {
+			model.addAttribute("action", "editar");
 			return PAGINA_FORM_ESTAGIARIO;
 		}
 
-		Pessoa pessoa = getUsuarioLogado(session);
-
-		estagiario.setPessoa(pessoa);
-		estagiarioService.update(estagiario);
-
-		getUsuarioLogado(session);
-
-		redirect.addFlashAttribute("info", "Parabéns, " + pessoa.getNome() + ", seu cadastro foi realizado com sucesso!");
+		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
+		estagiario.setPessoa(pessoaService.getPessoaByCpf(cpf));
+		pessoaService.editarEstagiario(estagiario);
+		redirect.addFlashAttribute("info", "Parabéns, seu cadastro foi realizado com sucesso!");
 
 		return REDIRECT_PAGINA_INICIAL_ESTAGIARIO;
 	}
 	
 	@RequestMapping(value = "/Sobre", method = RequestMethod.GET)
 	public String getSobre(){
-		return "";
+		return PAGINA_SOBRE;
 	}
 	
-	@RequestMapping(value = "/Presenca/Estagio/{id}", method = RequestMethod.POST)
-	public String postPresenca(HttpSession session, @ModelAttribute("idTurma") Long idTurma, RedirectAttributes redirectAttributes) {
-		Pessoa pessoa = getUsuarioLogado(session);
-		Estagiario estagiario = estagiarioService.getEstagiarioByPessoaId(pessoa.getId());
+	@ResponseBody
+	@RequestMapping(value = "/Presenca/Estagio/{idEstagio}", method = RequestMethod.GET)
+	public boolean realizarPresenca(HttpSession session, @PathVariable("idEstagio") Long idEstagio, RedirectAttributes redirectAttributes) {
+		
+		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
+		Estagiario estagiario = pessoaService.getEstagiarioByPessoaCpf(cpf);
+		Estagio estagio = estagioService.getEstagioByIdAndEstagiarioId(idEstagio, estagiario.getId());
 
-		Turma turma = turmaService.getTurmaByIdAndEstagiarioId(idTurma, estagiario.getId());
-
-		boolean presencaLiberada = false;
-		if(turma != null) {
-			presencaLiberada = frequenciaService.liberarPreseca(turma);
-		}
-
-		boolean frequenciaNaoRealizada = frequenciaService.getFrequenciaDeHojeByEstagiarioId(estagiario.getId()) == null ? true : false;
-
-		if(presencaLiberada && frequenciaNaoRealizada){
+		if(permitirPresenca(estagio)) {
 			Frequencia frequencia = new Frequencia();
-
-			frequencia.setEstagiario(estagiario);
-			frequencia.setTurma(turma);
-
+			frequencia.setEstagio(estagio);
 			frequencia.setData(new Date());
-			frequencia.setStatusFrequencia(StatusFrequencia.PRESENTE);
 			frequencia.setHorario(new Date());
+			frequencia.setStatusFrequencia(StatusFrequencia.PRESENTE);
 
-			frequenciaService.save(frequencia);
+			estagioService.adicionarFrequencia(frequencia);
+			
+			return true;
 		}
 
-		return "redirect:/estagiario/minha-frequencia/turma/" + idTurma;
+		return false;
 	}
-	
-	@RequestMapping(value = "/Acompanhamento/Estagio/{id}", method = RequestMethod.GET)
-	public String getAcompanhamento(@PathVariable("idTurma") Long idTurma, Model model, HttpSession session) {
-		Pessoa pessoa = getUsuarioLogado(session);
 
-		Estagiario estagiario = estagiarioService.getEstagiarioByPessoaId(pessoa.getId());
+	private boolean permitirPresenca(Estagio estagio){
+		if (estagio != null){
+			Frequencia frequencia = estagioService.getFrequenciaByData(new Date(), estagio.getId());
+			if(frequencia == null) {
+				return estagioService.liberarPreseca(estagio.getTurma());
+			}
+		}
+		
+		return false;
+	}
 
-		List<Submissao> submissoes = turmaService.getSubmissoesByEstagiarioIdAndIdTurma(estagiario.getId(), idTurma);
+	@RequestMapping(value = "/Acompanhamento/Estagio/{idEstagio}", method = RequestMethod.GET)
+	public String getAcompanhamento(Model model, @PathVariable("idEstagio") Long idEstagio) {
+		
+		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
+		Estagiario estagiario = pessoaService.getEstagiarioByPessoaCpf(cpf);
+		Estagio estagio = estagioService.getEstagioByIdAndEstagiarioId(idEstagio, estagiario.getId()); 
+		
+		model.addAttribute("estagio", estagio);
 
-		model.addAttribute("submissoes", submissoes);
-		model.addAttribute("estagiarioNome", estagiario.getNomeCompleto());
-		model.addAttribute("turma", turmaService.getTurmaByIdAndEstagiarioId(idTurma, estagiario.getId()));
-
-		return "estagiario/info-turma";
+		return PAGINA_ACOMPANHAMENTO_ESTAGIARIO;
 	}
 		
 	@RequestMapping(value = "/Acompanhamento/Estagio/{id}/SubmeterPlano", method = RequestMethod.POST)
@@ -164,7 +148,7 @@ public class EstagiarioController {
 			}
 			Pessoa pessoa = getUsuarioLogado(session);
 			
-			Estagiario estagiario = estagiarioService.getEstagiarioByPessoaId(pessoa.getId());
+			Estagiario estagiario = pessoaService.getEstagiarioByPessoaId(pessoa.getId());
 			
 			Turma turma = turmaService.getTurmaByIdAndEstagiarioId(idTurma, estagiario.getId());
 			
@@ -190,13 +174,14 @@ public class EstagiarioController {
 
 			Pessoa pessoa = getUsuarioLogado(session);
 			
-			Estagiario estagiario = estagiarioService.getEstagiarioByPessoaId(pessoa.getId());
+			Estagiario estagiario = pessoaService.getEstagiarioByPessoaId(pessoa.getId());
 			
 			Turma turma = turmaService.getTurmaByIdAndEstagiarioId(idTurma, estagiario.getId());
 			
 			Tipo tipo = Tipo.RELATORIO_FINAL_ESTAGIO;
 								
-			turmaService.submeterDocumento(estagiario, turma, tipo, anexo);
+			//turmaService.submeterDocumento(estagiario, turma, tipo, anexo);
+			estagioService.submeterDocumento(estagiario, turma, tipo, anexo)
 			
 		} catch (IOException e) {
 			return "redirect:/500";
