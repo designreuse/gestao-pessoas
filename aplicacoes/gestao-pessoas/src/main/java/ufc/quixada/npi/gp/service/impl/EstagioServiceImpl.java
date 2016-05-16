@@ -1,13 +1,10 @@
 package ufc.quixada.npi.gp.service.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,15 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.ufc.quixada.npi.enumeration.QueryType;
 import br.ufc.quixada.npi.repository.GenericRepository;
-import net.objectlab.kit.datecalc.common.DateCalculator;
-import net.objectlab.kit.datecalc.common.DefaultHolidayCalendar;
-import net.objectlab.kit.datecalc.common.HolidayCalendar;
-import net.objectlab.kit.datecalc.common.HolidayHandlerType;
-import net.objectlab.kit.datecalc.joda.LocalDateKitCalculatorsFactory;
 import ufc.quixada.npi.gp.model.AvaliacaoRendimento;
 import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Estagio;
-import ufc.quixada.npi.gp.model.Folga;
 import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
@@ -35,7 +26,6 @@ import ufc.quixada.npi.gp.model.enums.TipoFrequencia;
 import ufc.quixada.npi.gp.repository.FrequenciaRepository;
 import ufc.quixada.npi.gp.service.DadoConsolidado;
 import ufc.quixada.npi.gp.service.EstagioService;
-import ufc.quixada.npi.gp.service.FolgaService;
 import ufc.quixada.npi.gp.utils.UtilGestao;
 @Named
 public class EstagioServiceImpl implements EstagioService {
@@ -45,10 +35,7 @@ public class EstagioServiceImpl implements EstagioService {
 	
 	@Inject
 	private FrequenciaRepository frequenciaRepository;
-		
-	@Inject
-	private FolgaService folgaService;
-	
+
 	@Inject
 	private GenericRepository<Estagio> estagioRepository;
 	
@@ -154,25 +141,8 @@ public class EstagioServiceImpl implements EstagioService {
 
 	@Override
 	public boolean liberarPreseca(Turma turma ) {
-		List<Folga> folgas = folgaService.find(Folga.class);
-		
-		Set<LocalDate> dataDosFeriados = new HashSet<LocalDate>();
-
-		for (Folga folga : folgas) {
-			dataDosFeriados.add(new LocalDate(folga.getData()));
-		}
-
-		HolidayCalendar<LocalDate> calendarioDeFeriados = new DefaultHolidayCalendar<LocalDate>(dataDosFeriados);
-
-		LocalDateKitCalculatorsFactory.getDefaultInstance().registerHolidays("NPI", calendarioDeFeriados);
-		DateCalculator<LocalDate> calendarioDeFeriadosNPI = LocalDateKitCalculatorsFactory.getDefaultInstance().getDateCalculator("NPI", HolidayHandlerType.FORWARD);
-
-		LocalDate dia = new LocalDate();
-
-		if (!calendarioDeFeriadosNPI.isNonWorkingDay(dia)) {
-			if(UtilGestao.hojeEDiaDeTrabahoDaTurma(turma.getHorarios()) && UtilGestao.isHoraPermitida(turma.getHorarios())){
-				return true;
-			}
+		if(UtilGestao.hojeEDiaDeTrabahoDaTurma(turma.getHorarios()) && UtilGestao.isHoraPermitida(turma.getHorarios())){
+			return true;
 		}
 
 		return false;
@@ -182,18 +152,6 @@ public class EstagioServiceImpl implements EstagioService {
 
 		LocalDate inicioPeriodoTemporario = new LocalDate(turma.getInicio());
 		LocalDate fimPeriodo = new LocalDate(new Date());
-
-		List<Folga> folgas = folgaService.getFolgasByAno(Calendar.getInstance().get(Calendar.YEAR));
-		Set<LocalDate> dataDosFeriados = new HashSet<LocalDate>();
-
-		if (folgas != null) {
-			for (Folga folga : folgas) {
-				dataDosFeriados.add(new LocalDate(folga.getData()));
-			}
-		}
-
-		HolidayCalendar<LocalDate> calendarioDeFeriados = new DefaultHolidayCalendar<LocalDate>(dataDosFeriados);
-		LocalDateKitCalculatorsFactory.getDefaultInstance().registerHolidays("NPI", calendarioDeFeriados);
 
 		List<Frequencia> frequencias = new ArrayList<Frequencia>();
 		
@@ -293,7 +251,7 @@ public class EstagioServiceImpl implements EstagioService {
 	
 	@Override
 	public void realizarAvaliacaoRendimento(AvaliacaoRendimento avaliacaoRendimento) {
-		avaliacaoRendimentoRepository.save(avaliacaoRendimento);	
+		avaliacaoRendimentoRepository.save(avaliacaoRendimento);
 	}
 
 	@Override

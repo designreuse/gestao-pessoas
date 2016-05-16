@@ -46,7 +46,7 @@ public class Submissao {
 	private TipoSubmissao tipoSubmissao;
 	
 	@Enumerated(EnumType.STRING)
-	private StatusEntrega status;
+	private StatusEntrega statusEntrega;
 	
 	public Long getId() {
 		return id;
@@ -80,14 +80,14 @@ public class Submissao {
 		this.data = data;
 	}
 	
-	public StatusEntrega getStatus() {
-		return status;
+	public StatusEntrega getStatusEntrega() {
+		return statusEntrega;
 	}
 
 	public void setStatusEntrega(StatusEntrega statusEntrega) {
-		this.status = statusEntrega;
+		this.statusEntrega = statusEntrega;
 	}
-		
+
 	public TipoSubmissao getTipoSubmissao() {
 		return tipoSubmissao;
 	}

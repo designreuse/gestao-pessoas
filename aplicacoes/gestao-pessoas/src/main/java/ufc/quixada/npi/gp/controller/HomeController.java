@@ -21,8 +21,6 @@ import br.ufc.quixada.npi.ldap.service.UsuarioService;
 import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Papel;
 import ufc.quixada.npi.gp.model.Pessoa;
-import ufc.quixada.npi.gp.service.EstagiarioService;
-import ufc.quixada.npi.gp.service.PapelService;
 import ufc.quixada.npi.gp.service.PessoaService;
 import ufc.quixada.npi.gp.utils.Constants;
 
@@ -32,13 +30,7 @@ import ufc.quixada.npi.gp.utils.Constants;
 public class HomeController {
 
 	@Inject
-	private EstagiarioService estagiarioService;
-
-	@Inject
 	private PessoaService pessoaService;
-
-	@Inject
-	private PapelService papelService;
 
 	@Inject
 	private UsuarioService usuarioService;

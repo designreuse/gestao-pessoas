@@ -30,9 +30,7 @@ import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.model.enums.StatusFrequencia;
-import ufc.quixada.npi.gp.model.enums.Tipo;
-import ufc.quixada.npi.gp.service.EstagiarioService;
-import ufc.quixada.npi.gp.service.FrequenciaService;
+import ufc.quixada.npi.gp.service.EstagioService;
 import ufc.quixada.npi.gp.service.PessoaService;
 import ufc.quixada.npi.gp.service.TurmaService;
 import ufc.quixada.npi.gp.utils.Constants;
@@ -45,13 +43,10 @@ public class EstagiarioController {
 	private PessoaService pessoaService;
 
 	@Inject
-	private EstagiarioService estagiarioService;
-
-	@Inject
 	private TurmaService turmaService;
 
 	@Inject
-	private FrequenciaService frequenciaService;
+	private EstagioService estagioService;
 
 	@RequestMapping(value = "/MinhasTurmas", method = RequestMethod.GET)
 	public String getTurmas(Model model, HttpSession session) {

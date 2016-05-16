@@ -2,11 +2,12 @@ package ufc.quixada.npi.gp.controller;
 
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_DECLARACAO_ESTAGIO;
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_FORM_TURMA;
+import static ufc.quixada.npi.gp.utils.Constants.PAGINA_FORM_VINCULOS;
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_INFO_TURMA;
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_MAPA_FREQUENCIAS;
-import static ufc.quixada.npi.gp.utils.Constants.PAGINA_FORM_VINCULOS;
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_TCE;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.ufc.quixada.npi.ldap.model.Usuario;
@@ -33,26 +35,24 @@ import br.ufc.quixada.npi.ldap.service.UsuarioService;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import ufc.quixada.npi.gp.model.AvaliacaoRendimento;
+import ufc.quixada.npi.gp.model.Documento;
 import ufc.quixada.npi.gp.model.Estagiario;
+import ufc.quixada.npi.gp.model.Evento;
 import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Horario;
 import ufc.quixada.npi.gp.model.Papel;
 import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Servidor;
+import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.model.enums.Dia;
 import ufc.quixada.npi.gp.model.enums.StatusFrequencia;
 import ufc.quixada.npi.gp.model.enums.StatusTurma;
 import ufc.quixada.npi.gp.model.enums.TipoFrequencia;
-import ufc.quixada.npi.gp.service.AvaliacaoService;
 import ufc.quixada.npi.gp.service.DadoConsolidado;
-import ufc.quixada.npi.gp.service.EstagiarioService;
-import ufc.quixada.npi.gp.service.EventoService;
-import ufc.quixada.npi.gp.service.FrequenciaService;
-import ufc.quixada.npi.gp.service.HorarioService;
-import ufc.quixada.npi.gp.service.PapelService;
+import ufc.quixada.npi.gp.service.EstagioService;
 import ufc.quixada.npi.gp.service.PessoaService;
-import ufc.quixada.npi.gp.service.ServidorService;
 import ufc.quixada.npi.gp.service.TurmaService;
 import ufc.quixada.npi.gp.utils.Constants;
 import ufc.quixada.npi.gp.utils.UtilGestao;
@@ -66,32 +66,14 @@ public class SupervisorController {
 	private PessoaService pessoaService;
 
 	@Inject
-	private AvaliacaoService avaliacaoService;
-
-	@Inject
-	private ServidorService servidorService;
-
-	@Inject
 	private UsuarioService usuarioService;
 
 	@Inject
-	private EstagiarioService estagiarioService;
-
-	@Inject
-	private PapelService papelService;
+	private EstagioService estagioService;
 
 	@Inject
 	private TurmaService turmaService;
 
-	@Inject
-	private FrequenciaService frequenciaService;
-	
-	@Inject
-	private EventoService eventoService;
-	
-	@Inject
-	private HorarioService horarioService;
-	
 	private JRDataSource jrDatasource;
 	
 	@RequestMapping(value = { "", "/", "/Turmas" }, method = RequestMethod.GET)
