@@ -18,6 +18,7 @@ import ufc.quixada.npi.gp.model.enums.Comprometimento;
 import ufc.quixada.npi.gp.model.enums.CuidadoMateriais;
 import ufc.quixada.npi.gp.model.enums.CumprimentoPrazos;
 import ufc.quixada.npi.gp.model.enums.Disciplina;
+import ufc.quixada.npi.gp.model.enums.Frequencias;
 import ufc.quixada.npi.gp.model.enums.Iniciativa;
 import ufc.quixada.npi.gp.model.enums.Permanencia;
 import ufc.quixada.npi.gp.model.enums.QualidadeDeTrabalho;
@@ -58,7 +59,7 @@ public class AvaliacaoRendimento {
 	private String objetivoEstagio;
 
 	@Enumerated(EnumType.STRING)
-	private Frequencia frequencia;
+	private Frequencias frequencia;
 
 	@Enumerated(EnumType.STRING)
 	private Iniciativa iniciativa;
@@ -215,7 +216,7 @@ public class AvaliacaoRendimento {
 		this.comentarioAssuidadeDisciplina = comentarioAssuidadeDisciplina;
 	}
 
-	public Frequencia getFrequencia() {
+	public Frequencias getFrequencia() {
 		return frequencia;
 	}
 
@@ -391,8 +392,8 @@ public class AvaliacaoRendimento {
 		this.especificacaoTreinamento = especificacaoTreinamento;
 	}
 
-	public void setFrequencia(Frequencia frequencia) {
-		this.frequencia = frequencia;
+	public void setFrequencia(Frequencias frequencias) {
+		this.frequencia = frequencias;
 	}
 
 	public void setIniciativa(Iniciativa iniciativa) {
