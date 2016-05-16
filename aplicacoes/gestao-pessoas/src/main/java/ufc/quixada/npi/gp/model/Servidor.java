@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Servidor {
@@ -14,13 +13,16 @@ public class Servidor {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String siape;
-
 	@ManyToOne
 	private Pessoa pessoa;
 
-	@OneToOne
-	private Turma turma;
+	private String siape;
+
+	private String telefone;
+
+	private String cargo;
+
+	private String lotacao;
 
 	public Servidor() {
 		super();
@@ -53,6 +55,30 @@ public class Servidor {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getCargo() {
+		return cargo;
+	}
+
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
+	}
+
+	public String getLotacao() {
+		return lotacao;
+	}
+
+	public void setLotacao(String lotacao) {
+		this.lotacao = lotacao;
 	}
 
 }

@@ -1,4 +1,4 @@
-package ufc.quixada.npi.gp.model;
+package ufc.quixada.npi.gp.model.enums;
 
 public enum TipoTurma {
 	
