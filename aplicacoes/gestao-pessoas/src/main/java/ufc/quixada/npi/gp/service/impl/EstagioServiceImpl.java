@@ -23,6 +23,7 @@ import ufc.quixada.npi.gp.model.Turma;
 import ufc.quixada.npi.gp.model.enums.StatusEntrega;
 import ufc.quixada.npi.gp.model.enums.StatusFrequencia;
 import ufc.quixada.npi.gp.model.enums.TipoFrequencia;
+import ufc.quixada.npi.gp.model.enums.TipoSubmissao;
 import ufc.quixada.npi.gp.repository.FrequenciaRepository;
 import ufc.quixada.npi.gp.service.DadoConsolidado;
 import ufc.quixada.npi.gp.service.EstagioService;
@@ -232,16 +233,14 @@ public class EstagioServiceImpl implements EstagioService {
 		
 	}
 
-	//Verificar consulta por tipo
-	@Override
-	public Submissao getSubmissaoByEstagio(Estagio estagio) {
+	public Submissao getSubmissaoByEstagioIdAndTipo(Long idEstagio, TipoSubmissao tipoSubmissao) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("estagio", estagio);
+		params.put("idEstagio", idEstagio);
+		params.put("tipoSubmissao", tipoSubmissao);
 		
-		Submissao submissao = (Submissao) submissaoRepository.find(QueryType.JPQL, "select s from Submissao join Estagio e where e.turma.id = estagio.turma.id and e.estagiario.id = estagio.estagiario", params);
+		Submissao submissao = (Submissao) submissaoRepository.findFirst(QueryType.JPQL, "select s from Submissao s where s.tipoSubmissao = :tipoSubmissao and s.estagio.id = :idEstagio", params);
 
 		return submissao;
-
 	}
 
 	@Override
@@ -270,7 +269,7 @@ public class EstagioServiceImpl implements EstagioService {
 		params.put("idEstagio", idEstagio);
 		params.put("idEstagiario", idEstagiario);
 
-		Estagio estagio = (Estagio) estagioRepository.findFirst(QueryType.JPQL, "select e from Estagio where e.id = :idEstagio and e.estagiario.id = :idEstagiario ", params);
+		Estagio estagio = (Estagio) estagioRepository.findFirst(QueryType.JPQL, "select e from Estagio e where e.id = :idEstagio and e.estagiario.id = :idEstagiario ", params);
 
 		return estagio;
 	}
