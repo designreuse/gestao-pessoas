@@ -27,6 +27,8 @@ public interface PessoaService {
 			
 	Estagiario getEstagiarioByPessoa(Long idPessoa);
 	
+	void editarEstagiario(Estagiario estagiario);
+	
 	Servidor getServidorByPessoa(Long idPessoa);
 	
 	Servidor getServidorByPessoaCpf(String cpf);

@@ -263,6 +263,33 @@ public class EstagioServiceImpl implements EstagioService {
 
 		return estagiarios;
 	}
+
+	@Override
+	public Estagio getEstagioByIdAndEstagiarioId(Long idEstagio, Long idEstagiario) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idEstagio", idEstagio);
+		params.put("idEstagiario", idEstagiario);
+
+		Estagio estagio = (Estagio) estagioRepository.findFirst(QueryType.JPQL, "select e from Estagio where e.id = :idEstagio and e.estagiario.id = :idEstagiario ", params);
+
+		return estagio;
+	}
+
+	@Override
+	public void adicionarFrequencia(Frequencia frequencia) {
+		frequenciaRepository.save(frequencia);		
+	}
+
+	@Override
+	public boolean permitirPresenca(Estagio estagio) {
+		if (estagio != null){
+			Frequencia frequencia = getFrequenciaByData(new Date(), estagio.getId());
+			if(frequencia == null) {
+				return liberarPreseca(estagio.getTurma());
+			}
+		}
+		return false;
+	}
 	
 	// FIM NOVOS METODOS 
 

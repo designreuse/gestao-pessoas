@@ -141,4 +141,10 @@ public class PessoaServiceImpl implements PessoaService {
 		return servidor;
 	}
 
+	@Override
+	public void editarEstagiario(Estagiario estagiario) {
+		estagiarioRepository.update(estagiario);
+		
+	}
+
 }

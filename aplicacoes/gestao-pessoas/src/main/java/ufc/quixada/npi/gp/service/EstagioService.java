@@ -24,6 +24,8 @@ public interface EstagioService {
 
 	boolean liberarPreseca(Turma turma);
 	
+	boolean permitirPresenca(Estagio estagio);
+	
 	Frequencia getFrequenciaDeHojeByEstagiarioId(Long id);
 
 	List<Frequencia> getFrequenciasByEstagiarioId(Long idEstagiario, Long idTurma);
@@ -40,7 +42,11 @@ public interface EstagioService {
 	
 	List<Frequencia> frequenciaPendente(Turma turma, Estagiario estagiario);
 	
+	void adicionarFrequencia(Frequencia frequencia);
+	
 	List<Estagiario> getAniversariantesMesByTurmaId(Long id);
+	
+	Estagio getEstagioByIdAndEstagiarioId(Long idEstagio, Long idEstagiario);
 
 	
 
