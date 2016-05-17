@@ -289,6 +289,17 @@ public class EstagioServiceImpl implements EstagioService {
 		}
 		return false;
 	}
+
+	@Override
+	public Estagio getEstagioByIdAndEstagiarioCpf(Long idEstagio, String cpf) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("idEstagio", idEstagio);
+		params.put("cpf", cpf);
+
+		Estagio estagio = (Estagio) estagioRepository.findFirst(QueryType.JPQL, "select e from Estagio e where e.id = :idEstagio and e.estagiario.cpf = :cpf ", params);
+
+		return estagio;
+	}
 	
 	// FIM NOVOS METODOS 
 

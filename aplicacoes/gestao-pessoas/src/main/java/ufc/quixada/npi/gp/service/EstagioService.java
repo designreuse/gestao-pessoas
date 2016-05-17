@@ -11,10 +11,11 @@ import ufc.quixada.npi.gp.model.Estagio;
 import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Submissao;
 import ufc.quixada.npi.gp.model.Turma;
+import ufc.quixada.npi.gp.model.enums.TipoSubmissao;
 
 public interface EstagioService {
 	
-	Submissao getSubmissaoByEstagio(Estagio estagio);
+	Submissao getSubmissaoByEstagioIdAndTipo(Long idEstagio, TipoSubmissao tipoSubmissao);
 	
 	void avaliarSubmissao(Submissao submissao);
 	void realizarAvaliacaoRendimento(AvaliacaoRendimento avaliacaoRendimento);
@@ -47,6 +48,8 @@ public interface EstagioService {
 	List<Estagiario> getAniversariantesMesByTurmaId(Long id);
 	
 	Estagio getEstagioByIdAndEstagiarioId(Long idEstagio, Long idEstagiario);
+	
+	Estagio getEstagioByIdAndEstagiarioCpf(Long idEstagio, String cpf);
 
 	
 
