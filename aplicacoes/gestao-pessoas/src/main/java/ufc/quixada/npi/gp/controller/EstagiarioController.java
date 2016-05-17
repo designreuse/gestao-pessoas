@@ -97,7 +97,7 @@ public class EstagiarioController {
 		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
 		Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
 
-		if(permitirPresenca(estagio)) {
+		if(estagioService.permitirPresenca(estagio)) {
 			Frequencia frequencia = new Frequencia();
 			frequencia.setEstagio(estagio);
 			frequencia.setData(new Date());
@@ -109,17 +109,6 @@ public class EstagiarioController {
 			return true;
 		}
 
-		return false;
-	}
-
-	private boolean permitirPresenca(Estagio estagio){
-		if (estagio != null){
-			Frequencia frequencia = estagioService.getFrequenciaByData(new Date(), estagio.getId());
-			if(frequencia == null) {
-				return estagioService.liberarPreseca(estagio.getTurma());
-			}
-		}
-		
 		return false;
 	}
 
@@ -140,7 +129,7 @@ public class EstagiarioController {
 		try {
 			String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
 			Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
-			Submissao submissao = estagioService.getSubmissaoByEstagioId(idEstagio, TipoSubmissao.PLANO_ESTAGIO);
+			Submissao submissao = estagioService.getSubmissaoByEstagioIdAndTipo(idEstagio, TipoSubmissao.PLANO_ESTAGIO);
 			
 			if(submissao != null){
 				redirectAttributes.addFlashAttribute("error", "Não é possível realizar submissão.");
@@ -177,7 +166,7 @@ public class EstagiarioController {
 		try{
 			String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
 			Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
-			Submissao submissao = estagioService.getSubmissaoByEstagioId(idEstagio, TipoSubmissao.PLANO_ESTAGIO);
+			Submissao submissao = estagioService.getSubmissaoByEstagioIdAndTipo(idEstagio, TipoSubmissao.PLANO_ESTAGIO);
 	
 			if(anexo == null || !anexo.getContentType().equals("application/pdf")){
 				redirectAttributes.addFlashAttribute("error", "Escolha um arquivo pdf.");
@@ -186,7 +175,7 @@ public class EstagiarioController {
 			
 			submissao.getDocumento().setArquivo(anexo.getBytes());
 			estagioService.editarPlano(submissao);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return "redirect:/500";
 		}
 		
@@ -199,7 +188,7 @@ public class EstagiarioController {
 		try {
 			String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
 			Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
-			Submissao submissao = estagioService.getSubmissaoByEstagioId(idEstagio, TipoSubmissao.RELATORIO_FINAL_ESTAGIO);
+			Submissao submissao = estagioService.getSubmissaoByEstagioIdAndTipo(idEstagio, TipoSubmissao.RELATORIO_FINAL_ESTAGIO);
 			
 			if(submissao != null){
 				redirectAttributes.addFlashAttribute("error", "Não é possível realizar submissão.");
@@ -236,7 +225,7 @@ public class EstagiarioController {
 		try{
 			String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
 			Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
-			Submissao submissao = estagioService.getSubmissaoByEstagioId(idEstagio, TipoSubmissao.RELATORIO_FINAL_ESTAGIO);
+			Submissao submissao = estagioService.getSubmissaoByEstagioIdAndTipo(idEstagio, TipoSubmissao.RELATORIO_FINAL_ESTAGIO);
 	
 			if(anexo == null || !anexo.getContentType().equals("application/pdf")){
 				redirectAttributes.addFlashAttribute("error", "Escolha um arquivo pdf.");
@@ -245,7 +234,7 @@ public class EstagiarioController {
 			
 			submissao.getDocumento().setArquivo(anexo.getBytes());
 			estagioService.editarRelatorio(submissao);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return "redirect:/500";
 		}
 		

@@ -48,9 +48,13 @@ public interface EstagioService {
 	List<Estagiario> getAniversariantesMesByTurmaId(Long id);
 	
 	Estagio getEstagioByIdAndEstagiarioId(Long idEstagio, Long idEstagiario);
-	
+			
 	Estagio getEstagioByIdAndEstagiarioCpf(Long idEstagio, String cpf);
-
 	
+	void submeterPlano(Submissao submissao);
+	void submeterRelatorio(Submissao submissao);
+	void editarPlano(Submissao submissao)  throws Exception;
+	void editarRelatorio(Submissao submissao) throws Exception;
+	void realizarPresenca(Estagio estagio);
 
 }
