@@ -1,14 +1,13 @@
 package ufc.quixada.npi.gp.controller;
 
+import static ufc.quixada.npi.gp.utils.Constants.PAGINA_ACOMPANHAMENTO_ESTAGIARIO;
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_FORM_ESTAGIARIO;
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_INICIAL_ESTAGIARIO;
 import static ufc.quixada.npi.gp.utils.Constants.PAGINA_SOBRE;
-import static ufc.quixada.npi.gp.utils.Constants.PAGINA_ACOMPANHAMENTO_ESTAGIARIO;
 import static ufc.quixada.npi.gp.utils.Constants.REDIRECT_PAGINA_INICIAL_ESTAGIARIO;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -27,27 +26,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ufc.quixada.npi.gp.model.Documento;
 import ufc.quixada.npi.gp.model.Estagiario;
 import ufc.quixada.npi.gp.model.Estagio;
 import ufc.quixada.npi.gp.model.Frequencia;
 import ufc.quixada.npi.gp.model.Pessoa;
 import ufc.quixada.npi.gp.model.Submissao;
-import ufc.quixada.npi.gp.model.Turma;
+import ufc.quixada.npi.gp.model.enums.StatusEntrega;
 import ufc.quixada.npi.gp.model.enums.StatusFrequencia;
+import ufc.quixada.npi.gp.model.enums.TipoSubmissao;
 import ufc.quixada.npi.gp.service.EstagioService;
 import ufc.quixada.npi.gp.service.PessoaService;
 import ufc.quixada.npi.gp.service.TurmaService;
 import ufc.quixada.npi.gp.utils.Constants;
 
 @Controller
-@RequestMapping("estagiario")
+@RequestMapping("Estagiario")
 public class EstagiarioController {
 
 	@Inject
 	private PessoaService pessoaService;
-
-	@Inject
-	private TurmaService turmaService;
 
 	@Inject
 	private EstagioService estagioService;
@@ -97,8 +95,7 @@ public class EstagiarioController {
 	public boolean realizarPresenca(HttpSession session, @PathVariable("idEstagio") Long idEstagio, RedirectAttributes redirectAttributes) {
 		
 		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
-		Estagiario estagiario = pessoaService.getEstagiarioByPessoaCpf(cpf);
-		Estagio estagio = estagioService.getEstagioByIdAndEstagiarioId(idEstagio, estagiario.getId());
+		Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
 
 		if(permitirPresenca(estagio)) {
 			Frequencia frequencia = new Frequencia();
@@ -130,75 +127,131 @@ public class EstagiarioController {
 	public String getAcompanhamento(Model model, @PathVariable("idEstagio") Long idEstagio) {
 		
 		String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
-		Estagiario estagiario = pessoaService.getEstagiarioByPessoaCpf(cpf);
-		Estagio estagio = estagioService.getEstagioByIdAndEstagiarioId(idEstagio, estagiario.getId()); 
+		Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf); 
 		
 		model.addAttribute("estagio", estagio);
 
 		return PAGINA_ACOMPANHAMENTO_ESTAGIARIO;
 	}
 		
-	@RequestMapping(value = "/Acompanhamento/Estagio/{id}/SubmeterPlano", method = RequestMethod.POST)
-	public String postSubmeterPlano(@Valid @RequestParam("anexo") MultipartFile anexo, HttpSession session, Model model, @ModelAttribute("idTurma") Long idTurma, RedirectAttributes redirectAttributes ){
+	@RequestMapping(value = "/Acompanhamento/Estagio/{idEstagio}/SubmeterPlano", method = RequestMethod.POST)
+	public String postSubmeterPlano(@Valid @RequestParam("anexo") MultipartFile anexo, @PathVariable("idEstagio") Long idEstagio, RedirectAttributes redirectAttributes ){
 							
 		try {
-			if(!anexo.getContentType().equals("application/pdf")){
-				redirectAttributes.addFlashAttribute("error", "Escolha um arquivo pdf.");
-				return "redirect:/estagiario/turma/" + idTurma;
+			String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
+			Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
+			Submissao submissao = estagioService.getSubmissaoByEstagioId(idEstagio, TipoSubmissao.PLANO_ESTAGIO);
+			
+			if(submissao != null){
+				redirectAttributes.addFlashAttribute("error", "Não é possível realizar submissão.");
+				return "";
 			}
-			Pessoa pessoa = getUsuarioLogado(session);
+
+			if(anexo == null || !anexo.getContentType().equals("application/pdf")){
+				redirectAttributes.addFlashAttribute("error", "Escolha um arquivo pdf.");
+				return "";
+			}
 			
-			Estagiario estagiario = pessoaService.getEstagiarioByPessoaId(pessoa.getId());
-			
-			Turma turma = turmaService.getTurmaByIdAndEstagiarioId(idTurma, estagiario.getId());
-			
-			Tipo tipo = Tipo.PLANO_ESTAGIO;
-			
-			turmaService.submeterDocumento(estagiario, turma, tipo, anexo);
+			submissao = new Submissao();
+			Documento documento = new Documento();
+			documento.setNome(TipoSubmissao.PLANO_ESTAGIO + "_" + estagio.getEstagiario().getNomeCompleto().toUpperCase());
+			documento.setExtensao(anexo.getContentType());
+			documento.setArquivo(anexo.getBytes());
+			submissao.setTipoSubmissao(TipoSubmissao.PLANO_ESTAGIO);
+			submissao.setDocumento(documento);
+			submissao.setData(new Date());
+			submissao.setHora(new Date());
+			submissao.setStatusEntrega(StatusEntrega.SUBMETIDO);
+			estagioService.submeterPlano(submissao);
 			
 		} catch (IOException e) {
 			return "redirect:/500";
 		}
 
-		return "redirect:/estagiario/turma/" + idTurma;
+		return "redirect:/Acompanhamento/Estagio/" + idEstagio;
 	}
 	
-	@RequestMapping(value = "/Acompanhamento/Estagio/{id}/SubmeterRelatorio", method = RequestMethod.POST)
-	public String postSubmeterRelatorio(@Valid @RequestParam("anexo") MultipartFile anexo, HttpSession session, Model model, @ModelAttribute("idTurma") Long idTurma, RedirectAttributes redirectAttributes ){
+	@RequestMapping(value = "/Acompanhamento/Estagio/{idEstagio}/EditarPlano", method = RequestMethod.POST)
+	public String postEditarPlano(@Valid @RequestParam("anexo") MultipartFile anexo, @PathVariable("idEstagio") Long idEstagio, RedirectAttributes redirectAttributes){
+		
+		try{
+			String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
+			Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
+			Submissao submissao = estagioService.getSubmissaoByEstagioId(idEstagio, TipoSubmissao.PLANO_ESTAGIO);
+	
+			if(anexo == null || !anexo.getContentType().equals("application/pdf")){
+				redirectAttributes.addFlashAttribute("error", "Escolha um arquivo pdf.");
+				return "";
+			}
+			
+			submissao.getDocumento().setArquivo(anexo.getBytes());
+			estagioService.editarPlano(submissao);
+		} catch (IOException e) {
+			return "redirect:/500";
+		}
+		
+		return "redirect:/Acompanhamento/Estagio/" + idEstagio;
+	}
+	
+	@RequestMapping(value = "/Acompanhamento/Estagio/{idEstagio}/SubmeterRelatorio", method = RequestMethod.POST)
+	public String postSubmeterRelatorio(@Valid @RequestParam("anexo") MultipartFile anexo, @PathVariable("idEstagio") Long idEstagio, RedirectAttributes redirectAttributes ){
 
 		try {
-			if(!anexo.getContentType().equals("application/pdf")){
-				redirectAttributes.addFlashAttribute("error", "Escolha um arquivo pdf.");
-				return "redirect:/estagiario/turma/" + idTurma;
+			String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
+			Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
+			Submissao submissao = estagioService.getSubmissaoByEstagioId(idEstagio, TipoSubmissao.RELATORIO_FINAL_ESTAGIO);
+			
+			if(submissao != null){
+				redirectAttributes.addFlashAttribute("error", "Não é possível realizar submissão.");
+				return "";
 			}
 
-			Pessoa pessoa = getUsuarioLogado(session);
+			if(anexo == null || !anexo.getContentType().equals("application/pdf")){
+				redirectAttributes.addFlashAttribute("error", "Escolha um arquivo pdf.");
+				return "";
+			}
 			
-			Estagiario estagiario = pessoaService.getEstagiarioByPessoaId(pessoa.getId());
-			
-			Turma turma = turmaService.getTurmaByIdAndEstagiarioId(idTurma, estagiario.getId());
-			
-			Tipo tipo = Tipo.RELATORIO_FINAL_ESTAGIO;
-								
-			//turmaService.submeterDocumento(estagiario, turma, tipo, anexo);
-			estagioService.submeterDocumento(estagiario, turma, tipo, anexo)
+			submissao = new Submissao();
+			Documento documento = new Documento();
+			documento.setNome(TipoSubmissao.RELATORIO_FINAL_ESTAGIO + "_" + estagio.getEstagiario().getNomeCompleto().toUpperCase());
+			documento.setExtensao(anexo.getContentType());
+			documento.setArquivo(anexo.getBytes());
+			submissao.setTipoSubmissao(TipoSubmissao.RELATORIO_FINAL_ESTAGIO);
+			submissao.setDocumento(documento);
+			submissao.setData(new Date());
+			submissao.setHora(new Date());
+			submissao.setStatusEntrega(StatusEntrega.SUBMETIDO);
+			estagioService.submeterRelatorio(submissao);
 			
 		} catch (IOException e) {
 			return "redirect:/500";
 		}
 
-		return "redirect:/estagiario/turma/" + idTurma;
+		return "redirect:/Acompanhamento/Estagio/" + idEstagio;
 	}
 
-	@RequestMapping(value = "/Acompanhamento/Estagio/{id}/EditarRelatorio", method = RequestMethod.POST)
-	public String postEditarRelatorio(){
-		return "";
+	@RequestMapping(value = "/Acompanhamento/Estagio/{idEstagio}/EditarRelatorio", method = RequestMethod.POST)
+	public String postEditarRelatorio(@Valid @RequestParam("anexo") MultipartFile anexo, @PathVariable("idEstagio") Long idEstagio, RedirectAttributes redirectAttributes){
+		
+		try{
+			String cpf = SecurityContextHolder.getContext().getAuthentication().getName();
+			Estagio estagio = estagioService.getEstagioByIdAndEstagiarioCpf(idEstagio, cpf);
+			Submissao submissao = estagioService.getSubmissaoByEstagioId(idEstagio, TipoSubmissao.RELATORIO_FINAL_ESTAGIO);
+	
+			if(anexo == null || !anexo.getContentType().equals("application/pdf")){
+				redirectAttributes.addFlashAttribute("error", "Escolha um arquivo pdf.");
+				return "";
+			}
+			
+			submissao.getDocumento().setArquivo(anexo.getBytes());
+			estagioService.editarRelatorio(submissao);
+		} catch (IOException e) {
+			return "redirect:/500";
+		}
+		
+		return "redirect:/Acompanhamento/Estagio/" + idEstagio;
 	}
 	
-	@RequestMapping(value = "/Acompanhamento/Estagio/{id}/EditarPlano", method = RequestMethod.POST)
-	public String postEditarPlano(){
-		return "";
-	}
 	
 	private Pessoa getUsuarioLogado(HttpSession session) {
 		Pessoa pessoa = (Pessoa) session.getAttribute(Constants.USUARIO_LOGADO);
